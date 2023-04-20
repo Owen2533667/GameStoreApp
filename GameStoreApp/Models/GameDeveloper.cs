@@ -6,8 +6,11 @@ namespace GameStoreApp.Models
     {
         [Key]
         public int Id { get; set; }
+        [Display(Name = "Developer Logo")]
         public string Logo { get; set; }
+        [Display(Name = "Developer Name")]
         public string Name { get; set; }
+        [Display(Name = "Developer Description")]
         public string Description { get; set; }
 
         //Relationships
