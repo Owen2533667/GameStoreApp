@@ -232,7 +232,7 @@ namespace GameStoreApp.Data
                             //Name of the game
                             Name = "FIFA 23",
                             //Description of the game
-                            Description = "FIFA 23 is a football video game published by Electronic Arts (or simply EA). It is the 30th and final installment in the FIFA series that is developed by EA Sports, and the final installment under the FIFA banner, and released worldwide on 30 September 2022 for Nintendo Switch, PlayStation 4, PlayStation 5, Windows, Xbox One and Xbox Series X/S.",
+                            Description = "FIFA 23 brings The World’s Game to the pitch, with HyperMotion2 Technology, men’s and women’s FIFA World Cup™coming during the season, women’s club teams, cross-play features*, and more.",
                             //Release date of the game
                             ReleaseDate = new DateTime(2022, 09, 30),
                             //Price of the game
@@ -240,7 +240,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.SimulationSport,
 						    //URL path
-                            imageURL = "/Images/GameImage/",
+                            ImageURL = "/Images/GameImage/",
                             GameDeveloperId = 6,
                             GamePublisherId = 1
                         },
@@ -249,7 +249,7 @@ namespace GameStoreApp.Data
                             //Name of the game
                             Name = "FIFA 22",
                             //Description of the game
-                            Description = "FIFA 22 is a football simulation video game published by Electronic Arts. It is the 29th installment in the FIFA series, and was released worldwide on 1 October 2021 for Nintendo Switch, PlayStation 4, PlayStation 5, Stadia, Windows, Xbox One, and Xbox Series X/S. Players who pre-ordered the ultimate edition, however, received four days of early access and were able to play the game from 27 September.",
+                            Description = "Powered by Football™, EA SPORTS™ FIFA 22 brings the game even closer to the real thing with fundamental gameplay advances and a new season of innovation across every mode.",
                             //Release date of the game
                             ReleaseDate = new DateTime(2021, 10, 01),
                             //Price of the game
@@ -257,7 +257,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.SimulationSport,
 						    //URL path
-                            imageURL = "/Images/GameImage/FIFA-22.jpg",
+                            ImageURL = "/Images/GameImage/FIFA-22.jpg",
                             GameDeveloperId = 6,
                             GamePublisherId = 1
                         },
@@ -266,7 +266,7 @@ namespace GameStoreApp.Data
                             //Name of the game
                             Name = "Europa Universalis IV",
                             //Description of the game
-                            Description = "Europa Universalis IV is a 2013 grand strategy video game in the Europa Universalis series, developed by Paradox Development Studio and published by Paradox Interactive as a sequel to Europa Universalis III (2007). The game was released on 13 August 2013. It is a strategy game where players can control a nation from the Late Middle Ages through the early modern period (1444–1821), conducting trade, administration, diplomacy, colonization, and warfare.",
+                            Description = "Europa Universalis IV gives you control of a nation through four dramatic centuries. Rule your land and dominate the world with unparalleled freedom, depth and historical accuracy. Write a new history of the world and build an empire for the ages.",
                             //Release date of the game
                             ReleaseDate = new DateTime(2013, 07, 13),
                             //Price of the game
@@ -274,7 +274,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.GrandStrategy,
 						    //URL path
-                            imageURL = "/Images/GameImage/Europa-Universalis-IV.png",
+                            ImageURL = "/Images/GameImage/Europa-Universalis-IV.png",
                             GameDeveloperId = 2,
                             GamePublisherId = 5
                         },
@@ -283,7 +283,7 @@ namespace GameStoreApp.Data
                             //Name of the game
                             Name = "Crusader Kings III",
                             //Description of the game
-                            Description = "Crusader Kings III is a grand strategy role-playing video game set in the Middle Ages, developed by Paradox Development Studio and published by Paradox Interactive as a sequel to Crusader Kings (2004) and Crusader Kings II (2012). The game was released on PC on 1 September 2020 and on the Xbox Series X/S and PlayStation 5 on 29 March 2022.",
+                            Description = "Love, fight, scheme, and claim greatness. Determine your noble house’s legacy in the sprawling grand strategy of Crusader Kings III. Death is only the beginning as you guide your dynasty’s bloodline in the rich and larger-than-life simulation of the Middle Ages.",
                             //Release date of the game
                             ReleaseDate = new DateTime(2020, 09, 01),
                             //Price of the game
@@ -291,7 +291,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.GrandStrategy,
 						    //URL path
-                            imageURL = "/Images/GameImage/Crusader-Kings-III.jpg",
+                            ImageURL = "/Images/GameImage/Crusader-Kings-III.jpg",
                             GameDeveloperId = 2,
                             GamePublisherId = 5
                         },
@@ -300,7 +300,7 @@ namespace GameStoreApp.Data
                             //Name of the game
                             Name = "Stellaris ",
                             //Description of the game
-                            Description = "Stellaris is a 4X grand strategy video game developed by Paradox Development Studio and published by Paradox Interactive. In Stellaris, players take control of an interstellar civilization on the galactic stage and are tasked with exploring, colonizing, and managing their region of the galaxy, encountering other civilizations that they can then engage in diplomacy, trade, or warfare with. A large part of the game involves dealing with both scripted and emergent events, through which new empires alter the balance of power, powerful crises threaten the galaxy, or event chains tell the story of forgotten empires. It was released worldwide for Windows, macOS, and Linux on May 9, 2016 and for PlayStation 4 and Xbox One as Stellaris: Console Edition on February 26, 2019.",
+                            Description = "Explore a galaxy full of wonders in this sci-fi grand strategy game from Paradox Development Studios. Interact with diverse alien races, discover strange new worlds with unexpected events and expand the reach of your empire. Each new adventure holds almost limitless possibilities.",
                             //Release date of the game
                             ReleaseDate = new DateTime(2016, 05, 09),
                             //Price of the game
@@ -308,7 +308,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.GrandStrategy,
 						    //URL path
-                            imageURL = "/Images/GameImage/Crusader-Kings-III.jpg",
+                            ImageURL = "/Images/GameImage/Crusader-Kings-III.jpg",
                             GameDeveloperId = 2,
                             GamePublisherId = 5
                         },
@@ -317,7 +317,7 @@ namespace GameStoreApp.Data
                             //Name of the game
                             Name = "God of War Ragnarök",
                             //Description of the game
-                            Description = "God of War Ragnarök is an action-adventure game developed by Santa Monica Studio and published by Sony Interactive Entertainment. It was released worldwide on November 9, 2022, for both the PlayStation 4 and PlayStation 5, marking the first cross-gen release in the God of War series. It is the ninth installment in the series, the ninth chronologically, and the sequel to 2018's God of War. Loosely based on Norse mythology, the game is set in ancient Scandinavia and features series protagonist, Kratos, and his teenage son, Atreus. Concluding the Norse era of the series, the game covers Ragnarök, the eschatological event which is central to Norse mythology and was foretold to happen in the previous game after Kratos killed the Aesir god Baldur.",
+                            Description = "Kratos and Atreus must journey to each of the Nine Realms in search of answers as Asgardian forces prepare for a prophesied battle that will end the world. Along the way they will explore stunning, mythical landscapes, and face fearsome enemies in the form of Norse gods and monsters. The threat of Ragnarök grows ever closer. Kratos and Atreus must choose between their own safety and the safety of the realms.",
                             //Release date of the game
                             ReleaseDate = new DateTime(2022, 11, 09),
                             //Price of the game
@@ -325,7 +325,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.ActionAdventure,
 						    //URL path
-                            imageURL = "/Images/GameImage/God-of-War-Ragnarök.jpg",
+                            ImageURL = "/Images/GameImage/God-of-War-Ragnarök.jpg",
                             GameDeveloperId = 1,
                             GamePublisherId = 6
                         },
@@ -334,7 +334,7 @@ namespace GameStoreApp.Data
                             //Name of the game
                             Name = "God of War",
                             //Description of the game
-                            Description = "God of War is an action-adventure game developed by Santa Monica Studio and published by Sony Interactive Entertainment. It was released for the PlayStation 4 in April 2018, with a Windows port in January 2022. The game is the eighth installment in the God of War series, the eighth chronologically, and the sequel to 2010's God of War III. Unlike previous games, which were loosely based on Greek mythology, this installment is loosely inspired by Norse mythology, with the majority of it set in ancient Scandinavia in the realm of Midgard. For the first time in the series, there are two protagonists: Kratos, the former Greek God of War who remains the only playable character, and his young son, Atreus. Following the death of Kratos' second wife, Faye (Atreus' mother), the two embark on a journey to fulfill her request that her ashes be spread at the highest peak of the nine realms. Kratos keeps his troubled past a secret from Atreus, who is unaware of his divine nature. Along their journey, they come into conflict with monsters and gods of the Norse world.",
+                            Description = "His vengeance against the Gods of Olympus years behind him, Kratos now lives as a man in the realm of Norse Gods and monsters. It is in this harsh, unforgiving world that he must fight to survive… and teach his son to do the same.",
                             //Release date of the game
                             ReleaseDate = new DateTime(2018, 04, 20),
                             //Price of the game
@@ -342,7 +342,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.ActionAdventure,
 						    //URL path
-                            imageURL = "/Images/GameImage/God-of-War-4.jpg",
+                            ImageURL = "/Images/GameImage/God-of-War-4.jpg",
                             GameDeveloperId = 1,
                             GamePublisherId = 6
                         },
@@ -359,7 +359,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.Shooter,
 						    //URL path
-                            imageURL = "/Images/GameImage/Battlefield-2042.jpg",
+                            ImageURL = "/Images/GameImage/Battlefield-2042.jpg",
                             GameDeveloperId = 5,
                             GamePublisherId = 1
                         },
@@ -376,7 +376,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.Shooter,
 						    //URL path
-                            imageURL = "/Images/GameImage/Battlefield-2042.jpg",
+                            ImageURL = "/Images/GameImage/Battlefield-2042.jpg",
                             GameDeveloperId = 5,
                             GamePublisherId = 1
                         },
@@ -393,7 +393,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.Shooter,
 						    //URL path
-                            imageURL = "/Images/GameImage/Battlefield-V.jpg",
+                            ImageURL = "/Images/GameImage/Battlefield-V.jpg",
                             GameDeveloperId = 5,
                             GamePublisherId = 1
                         },
@@ -410,7 +410,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.Shooter,
 						    //URL path
-                            imageURL = "/Images/GameImage/SWBF2.jpg",
+                            ImageURL = "/Images/GameImage/SWBF2.jpg",
                             GameDeveloperId = 5,
                             GamePublisherId = 1
                         },
@@ -427,7 +427,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.Shooter,
 						    //URL path
-                            imageURL = "/Images/GameImage/Battlefield-1.jpg",
+                            ImageURL = "/Images/GameImage/Battlefield-1.jpg",
                             GameDeveloperId = 5,
                             GamePublisherId = 1
                         },
@@ -444,7 +444,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.ActionAdventure,
 						    //URL path
-                            imageURL = "/Images/GameImage/Mirror's-Edge-Catalyst-1.jpg",
+                            ImageURL = "/Images/GameImage/Mirror's-Edge-Catalyst-1.jpg",
                             GameDeveloperId = 5,
                             GamePublisherId = 1
                         },
@@ -453,7 +453,7 @@ namespace GameStoreApp.Data
                             //Name of the game
                             Name = "Animal Crossing: New Horizons",
                             //Description of the game
-                            Description = "Animal Crossing: New Horizons is a social simulation game developed and published by Nintendo in 2020 for the Nintendo Switch; it is the fifth main entry in the Animal Crossing series. In New Horizons, the player controls a character who moves to a deserted island after purchasing a getaway package from Tom Nook, accomplishes assigned tasks, and develops the island as they choose. They can gather and craft items, customize the island, and develop it into a community of anthropomorphic animals.",
+                            Description = "Animal Crossing: New Horizons is a social simulation game developed and published by Nintendo in 2020 for the Nintendo Switch; it is the fifth main entry in the Animal Crossing series. In New Horizons, the player controls a character who moves to a deserted island after purchasing a getaway package from Tom Nook, accomplishes assigned tasks, and develops the island as they choose.",
                             //Release date of the game
                             ReleaseDate = new DateTime(2022, 09, 30),
                             //Price of the game
@@ -461,7 +461,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.SocialSimulation,
 						    //URL path
-                            imageURL = "/Images/GameImage/Animal-Crossing-New-Horizons.jpg",
+                            ImageURL = "/Images/GameImage/Animal-Crossing-New-Horizons.jpg",
                             GameDeveloperId = 4,
                             GamePublisherId = 4
                         },
@@ -470,7 +470,7 @@ namespace GameStoreApp.Data
                             //Name of the game
                             Name = "For Honor",
                             //Description of the game
-                            Description = "For Honor is an action game developed and published by Ubisoft. The game allows players to play the roles of historical forms of soldiers and warriors such as knights, samurai, vikings, controlled using a third-person perspective. The game was developed primarily by Ubisoft Montreal and released worldwide for PlayStation 4, Windows, and Xbox One in 2017.",
+                            Description = "Carve a path of destruction through an intense, believable battlefield in For Honor.",
                             //Release date of the game
                             ReleaseDate = new DateTime(2017, 02, 14),
                             //Price of the game
@@ -478,7 +478,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.Action,
 						    //URL path
-                            imageURL = "/Images/GameImage/For-Honor.jpg",
+                            ImageURL = "/Images/GameImage/For-Honor.jpg",
                             GameDeveloperId = 3,
                             GamePublisherId = 3
                         },
@@ -495,7 +495,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.Action,
 						    //URL path
-                            imageURL = "/Images/GameImage/Assassin's-Creed-Valhalla.jpg",
+                            ImageURL = "/Images/GameImage/Assassin's-Creed-Valhalla.jpg",
                             GameDeveloperId = 3,
                             GamePublisherId = 3
                         },
@@ -512,7 +512,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.Action,
 						    //URL path
-                            imageURL = "/Images/GameImage/Assassin's-Creed-Odyssey.png",
+                            ImageURL = "/Images/GameImage/Assassin's-Creed-Odyssey.png",
                             GameDeveloperId = 3,
                             GamePublisherId = 3
                         },
@@ -529,7 +529,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.Action,
 						    //URL path
-                            imageURL = "/Images/GameImage/Assassin's-Creed-IV-Black-Flag.jpg",
+                            ImageURL = "/Images/GameImage/Assassin's-Creed-IV-Black-Flag.jpg",
                             GameDeveloperId = 3,
                             GamePublisherId = 3
                         },
