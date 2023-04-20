@@ -22,7 +22,12 @@ namespace GameStoreApp.Data.Enums
         [Display(Name = "Turn-Based Stratagy")]
         TurnStrategy,
         [Display(Name = "Party Game")]
-        Party
+        Party,
+        [Display(Name = "Grand Strategy")]
+        GrandStrategy,
+        [Display(Name = "Social Simulation")]
+        SocialSimulation,
+        Action
 
     }
 }
