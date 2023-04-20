@@ -14,20 +14,35 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GameStoreApp</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Game" asp-action="Index">GameStore</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Game" asp-action="Index"><i class="bi bi-controller"></i> Games</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="badge-info bi-gear"></i> Admin
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" asp-controller="GameDeveloper" asp-action="Index"><i class="bi bi-cpu"></i> Developer</a>
+                                <a class="dropdown-item" asp-controller="GamePublisher" asp-action="Index"><i class="bi bi-steam"></i> Publisher</a>
+                                <a class="dropdown-item" asp-controller="VoiceActor" asp-action="Index"><i class="bi bi-person-square"></i> Actors</a>
+                            </div>
                         </li>
                     </ul>
+
+                    <form class="form-inline my-2 my-lg-0" asp-controller="Game" asp-action="Filter" style="padding-right: 20px;">
+                        <input name="searchString" type="text" class="form-control" placeholder="Search for game..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="bi bi-search"></i></button>
+                    </form>
+
                 </div>
             </div>
         </nav>
@@ -40,7 +55,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - GameStoreApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - GameStore
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

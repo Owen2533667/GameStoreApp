@@ -17,8 +17,8 @@ namespace GameStoreApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var data = await _context.Games.ToListAsync();
-            return View();
+            var data = await _context.Games.Include(p => p.GamePublisher).Include(d => d.GameDeveloper).OrderBy(g => g.Name).ToListAsync();
+            return View(data);
         }
     }
 }
