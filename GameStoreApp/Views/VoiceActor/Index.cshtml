@@ -42,10 +42,5 @@
     </div>
 </div>
 
-@*This div is for the add button, that when clicked will use action Create from the VoiceActor controller*@
-<div class="text-white CreateAddButton">
-    <a asp-controller="VoiceActor" asp-action="Create" class="btn btn-success">
-        <i class="bi bi-plus-circle"> Add New</i></a>
-</div>
-
+@await Html.PartialAsync("_CreateButton", "VoiceActor")
 
