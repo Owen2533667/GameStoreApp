@@ -1,0 +1,95 @@
+﻿@model NewGameVM
+@using GameStoreApp.Data.Enums;
+@{
+    ViewData["Title"] = "Add new Game";
+}
+
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <p>
+            <h4>Create a new game</h4>
+        </p>
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Name" class="control-label"></label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ReleaseDate" class="control-label"></label>
+                                <input asp-for="ReleaseDate" type="date" class="form-control" />
+                                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Price" class="control-label"></label>
+                                <input asp-for="Price" type="number" min="0.00" max="10000.00" step="0.01" class="form-control" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ImageURL" class="control-label"></label>
+                                <input asp-for="ImageURL" class="form-control" />
+                                <span asp-validation-for="ImageURL" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="GamePublisherId" class="control-label"></label>
+                                <select asp-for="GamePublisherId" class="form-control" asp-items="ViewBag.Publishers"></select>
+                                <span asp-validation-for="GamePublisherId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="GameDeveloperId" class="control-label"></label>
+                                <select asp-for="GameDeveloperId" class="form-control" asp-items="ViewBag.Developers"></select>
+                                <span asp-validation-for="GameDeveloperId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="GameGenre" class="control-label"></label>
+                                <select asp-for="GameGenre" class="form-control" asp-items="Html.GetEnumSelectList<GameGenre>()"></select>
+                                <span asp-validation-for="GameGenre" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="VoiceActorIds" class="control-label"></label>
+                                <select asp-for="VoiceActorIds" class="form-control" multiple asp-items="ViewBag.VoiceActors"></select>
+                                <span asp-validation-for="VoiceActorIds" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="Description" class="control-label"></label>
+                                <textarea asp-for="Description" class="form-control"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 offset-4 text-center">
+                        <img width="100%" id="ImageURLPreview"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-outline-success float-sm-end" />
+                        <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-caret-left-fill"></i> Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var output = document.getElementById('ImageURLPreview');
+            output.src = $('#ImageURL').val();
+        })
+
+        $("#ImageURL").on("change", function () {
+            var output = document.getElementById('ImageURLPreview');
+            output.src = $(this).val();
+        })
+    </script>
+}
