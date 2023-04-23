@@ -1,19 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GameStoreApp.Data.Base;
+using System.ComponentModel.DataAnnotations;
 
 namespace GameStoreApp.Models
 {
-    public class GameDeveloper
+    public class GameDeveloper : IEntityBase
     {
         [Key]
         public int Id { get; set; }
         [Display(Name = "Developer Logo")]
-        public string Logo { get; set; }
+        [Required(ErrorMessage = "The Logo is a required field")]
+        public string? Logo { get; set; }
         [Display(Name = "Developer Name")]
-        public string Name { get; set; }
+        [Required(ErrorMessage = "The Name is a required field")]
+        public string? Name { get; set; }
         [Display(Name = "Developer Description")]
-        public string Description { get; set; }
+        [Required(ErrorMessage = "The Description is a required field")]
+        public string? Description { get; set; }
 
         //Relationships
-        public List<Game> Games { get; set; }
+        public List<Game>? Games { get; set; }
     }
 }
