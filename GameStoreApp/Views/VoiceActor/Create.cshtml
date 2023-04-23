@@ -43,16 +43,14 @@
 
 @section Scripts {
     <script>
-        if ($('#create-form-voice-actor')) {
-            $(document).ready(function () {
-                var output = document.getElementById('PicturePreview');
-                output.src = $('#PictureURL').val();
-            })
+        $(document).ready(function () {
+            var output = document.getElementById('PicturePreview');
+            output.src = $('#PictureURL').val();
+        })
 
-            $("#PictureURL").on("change", function () {
-                var output = document.getElementById('PicturePreview');
-                output.src = $(this).val();
-            })
-        }
+        $("#PictureURL").on("change", function () {
+            var output = document.getElementById('PicturePreview');
+            output.src = $(this).val();
+        })
     </script>
 }
