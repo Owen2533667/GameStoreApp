@@ -17,20 +17,31 @@ body {
     margin-bottom: 60px;
 }
 
+.searchbar-nav {
+    display: flex;
+}
+
 /*This css for add new button*/
 .CreateAddButton {
     position: fixed;
     right: 25px;
-    bottom: 25px
+    bottom: 25px;
+    padding-bottom: 40px;
 }
 
 
+/*Previews for images*/
 #PicturePreview {
     max-width: 150px;
 }
 
 #LogoPreview {
     max-width: 150px;
+}
+
+.VoiceActorImages {
+    max-width: 150px;
+    max-height: 150px;
 }
 
 
