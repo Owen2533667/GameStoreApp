@@ -13,6 +13,8 @@ builder.Services.AddDbContext<GameStoreAppDbContext>(options => options.UseSqlSe
 // Services configuration
 builder.Services.AddScoped<IVoiceActorService, VoiceActorService>();
 builder.Services.AddScoped<IGameDeveloperService, GameDeveloperService>();
+builder.Services.AddScoped<IGamePublisherService, GamePublisherService>();
+builder.Services.AddScoped<IGameService, GameService>();
 
 var app = builder.Build();
 
