@@ -1,14 +1,21 @@
 using GameStoreApp.Data;
+using GameStoreApp.Data.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 //DbContext configuration
 builder.Services.AddDbContext<GameStoreAppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
+// Services configuration
+builder.Services.AddScoped<IVoiceActorService, VoiceActorService>();
+builder.Services.AddScoped<IGameDeveloperService, GameDeveloperService>();
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
