@@ -1,10 +1,11 @@
-﻿using GameStoreApp.Data.Enums;
+﻿using GameStoreApp.Data.Base;
+using GameStoreApp.Data.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GameStoreApp.Models
 {
-    public class Game
+    public class Game : IEntityBase
     {
         [Key]
         public int Id { get; set; }
@@ -16,17 +17,17 @@ namespace GameStoreApp.Models
         public GameGenre GameGenre { get; set; }
 
         //Relationships
-        public List<VoiceActor_Game>? VoiceActors_Games { get; set; }
+        public List<VoiceActor_Game> VoiceActors_Games { get; set; }
 
         //Developer
         public int GameDeveloperId { get; set; }
         [ForeignKey("GameDeveloperId")]
-        public GameDeveloper? GameDeveloper { get; set; }
+        public GameDeveloper GameDeveloper { get; set; }
 
         //Publisher
         public int GamePublisherId { get; set; }
         [ForeignKey("GamePublisherId")]
-        public GamePublisher? GamePublisher { get; set; }
+        public GamePublisher GamePublisher { get; set; }
 
 
     }

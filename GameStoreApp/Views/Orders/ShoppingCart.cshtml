@@ -1,0 +1,93 @@
+﻿@model ShoppingCartVM
+@using GameStoreApp.Data.ViewModel;
+
+@{
+    ;
+    ViewData["Title"] = "Shopping Cart summary";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <div class="text-center">
+            <h2>Your shopping cart</h2>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Amount</th>
+                    <th>Game</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ShoppingCart.ShoppingCartItems)
+                {
+                    <tr>
+                        <td class="align-middle">@item.Amount</td>
+                        <td class="align-middle">@item.Game.Name</td>
+                        <td class="align-middle">@item.Game.Price.ToString("c")</td>
+                        <td class="align-middle">@((item.Amount*item.Game.Price).ToString("c"))</td>
+                        <td class="align-middle">
+                            <a class="text-danger" asp-controller="Orders" asp-action="RemoveFromShoppingCart" asp-route-id="@item.Game.Id"><i class="bi bi-cart-dash-fill"></i></a> | 
+                            <a class="text-success" asp-controller="Orders" asp-action="AddToShoppingCart" asp-route-id="@item.Game.Id"><i class="bi bi-cart-plus-fill"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"></td>
+                    <td><b>TOTAL: </b></td>
+                    <td>@Model.ShoppingCartTotal.ToString("c")</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="text-end">
+            <div class="btn-group">
+                @*<a class="btn btn-outline-success" asp-action="CompleteOrder"> Complete Order</a>*@
+                <div id="paypal-btn"></div>
+                <span class="span-btn-group-shopping-cart"></span>
+                <a class="btn btn-outline-success" asp-controller="Game" asp-action="Index"><i class="bi bi-caret-left-square-fill"></i> add more items</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+    <script>
+        paypal.Button.render({
+            //configure the environment
+            env: 'sandbox',
+            client: {
+                sandbox: 'AeBAhtpQue76jrLVLNhcszcK0u1haXZF-xqy6bSj6Q6TuuN0_8Z5yh9M_biWtkdl6_PN-NICVgPNC3lq'
+            },
+
+            //customise button
+            locale: 'en_GB',
+            style: {
+                size: 'small',
+                color: 'gold',
+                shape: 'pill'
+            },
+            commit: true,
+
+            //set up a payment
+            payment: function(data, actions) {
+                comsole.log("payment set up")
+            },
+
+            //execute the payment
+                    onAuthorize: function (data, actions) {
+                comsole.log("payment executed")
+            }
+
+        }, '#paypal-btn');
+    </script>
+}

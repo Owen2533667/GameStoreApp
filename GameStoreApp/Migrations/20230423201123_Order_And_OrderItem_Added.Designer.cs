@@ -4,6 +4,7 @@ using GameStoreApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameStoreApp.Migrations
 {
     [DbContext(typeof(GameStoreAppDbContext))]
-    partial class GameStoreAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230423201123_Order_And_OrderItem_Added")]
+    partial class Order_And_OrderItem_Added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,31 +166,6 @@ namespace GameStoreApp.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("GameStoreApp.Models.ShoppingCartItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ShoppingCartId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.ToTable("ShoppingCartItems");
-                });
-
             modelBuilder.Entity("GameStoreApp.Models.VoiceActor", b =>
                 {
                     b.Property<int>("Id")
@@ -265,17 +243,6 @@ namespace GameStoreApp.Migrations
                     b.Navigation("Game");
 
                     b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("GameStoreApp.Models.ShoppingCartItem", b =>
-                {
-                    b.HasOne("GameStoreApp.Models.Game", "Game")
-                        .WithMany()
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Game");
                 });
 
             modelBuilder.Entity("GameStoreApp.Models.VoiceActor_Game", b =>
