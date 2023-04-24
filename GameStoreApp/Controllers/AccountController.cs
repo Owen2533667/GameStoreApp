@@ -4,6 +4,7 @@ using GameStoreApp.Data.ViewModel;
 using GameStoreApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreApp.Controllers
 {
@@ -21,9 +22,10 @@ namespace GameStoreApp.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Users()
         {
-            return View();
+            var data = await _context.Users.ToListAsync();
+            return View(data);
         }
 
         public IActionResult Login()
@@ -101,5 +103,18 @@ namespace GameStoreApp.Controllers
             TempData["Error"] = "Password must contain: At least 6 characters, OneUpperCase, OneLowerCase, OneNumber, Symbol as [$#@]";
             return View(registerVM);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Game");
+        }
+
+        public IActionResult AccessDenied(string returnUrl)
+        {
+            return View();
+        }
+
     }
 }
