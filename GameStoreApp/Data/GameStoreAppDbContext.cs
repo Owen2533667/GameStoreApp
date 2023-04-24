@@ -1,5 +1,6 @@
 ﻿using GameStoreApp.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace GameStoreApp.Data
 {
@@ -29,6 +30,11 @@ namespace GameStoreApp.Data
         public DbSet<VoiceActor_Game> VoiceActors_Games { get; set; }
         public DbSet<GameDeveloper> GameDevelopers { get; set; }
         public DbSet<GamePublisher> GamePublishers { get; set; }
-        
+
+        //orders related tables
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
+
     }
 }
