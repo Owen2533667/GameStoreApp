@@ -1,0 +1,42 @@
+﻿@model IEnumerable<GameStoreUser>
+
+@{
+    ViewData["Title"] = "List of Users";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+
+        <div class="text-center">
+            <p>
+                <h3>ALL USERS</h3>
+            </p>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr class="text-center">
+                    <th>@Html.DisplayNameFor(model => model.firstName)</th>
+                    <th>@Html.DisplayNameFor(model => model.lastName)</th>
+                    <th>@Html.DisplayNameFor(model => model.Email)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.firstName)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.lastName)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
