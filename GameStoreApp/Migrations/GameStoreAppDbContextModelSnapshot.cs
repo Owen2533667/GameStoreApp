@@ -31,7 +31,6 @@ namespace GameStoreApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("GameDeveloperId")
@@ -43,8 +42,10 @@ namespace GameStoreApp.Migrations
                     b.Property<int>("GamePublisherId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ImageURL")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
@@ -52,10 +53,6 @@ namespace GameStoreApp.Migrations
 
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("imageURL")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -116,6 +113,81 @@ namespace GameStoreApp.Migrations
                     b.ToTable("GamePublishers");
                 });
 
+            modelBuilder.Entity("GameStoreApp.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("GameStoreApp.Models.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems");
+                });
+
+            modelBuilder.Entity("GameStoreApp.Models.ShoppingCartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ShoppingCartId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("ShoppingCartItems");
+                });
+
             modelBuilder.Entity("GameStoreApp.Models.VoiceActor", b =>
                 {
                     b.Property<int>("Id")
@@ -130,7 +202,8 @@ namespace GameStoreApp.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PictureURL")
                         .IsRequired()
@@ -175,6 +248,36 @@ namespace GameStoreApp.Migrations
                     b.Navigation("GamePublisher");
                 });
 
+            modelBuilder.Entity("GameStoreApp.Models.OrderItem", b =>
+                {
+                    b.HasOne("GameStoreApp.Models.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GameStoreApp.Models.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("GameStoreApp.Models.ShoppingCartItem", b =>
+                {
+                    b.HasOne("GameStoreApp.Models.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+                });
+
             modelBuilder.Entity("GameStoreApp.Models.VoiceActor_Game", b =>
                 {
                     b.HasOne("GameStoreApp.Models.Game", "Game")
@@ -207,6 +310,11 @@ namespace GameStoreApp.Migrations
             modelBuilder.Entity("GameStoreApp.Models.GamePublisher", b =>
                 {
                     b.Navigation("Games");
+                });
+
+            modelBuilder.Entity("GameStoreApp.Models.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("GameStoreApp.Models.VoiceActor", b =>
