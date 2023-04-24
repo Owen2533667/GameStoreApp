@@ -1,5 +1,7 @@
 using GameStoreApp.Data;
+using GameStoreApp.Data.Cart;
 using GameStoreApp.Data.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,12 @@ builder.Services.AddScoped<IVoiceActorService, VoiceActorService>();
 builder.Services.AddScoped<IGameDeveloperService, GameDeveloperService>();
 builder.Services.AddScoped<IGamePublisherService, GamePublisherService>();
 builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<IOrdersService, OrdersService>();
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped(sc => ShoppingCart.GetShoppingCart(sc));
+
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -32,6 +40,7 @@ app.UseStaticFiles();
 
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthorization();
 
