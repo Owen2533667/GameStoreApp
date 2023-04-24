@@ -30,6 +30,11 @@ body {
 }
 
 
+.login-btn {
+    margin-top: 10px;
+}
+
+
 /*Previews for images*/
 #PicturePreview {
     max-width: 150px;

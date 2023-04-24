@@ -1,7 +1,10 @@
 using GameStoreApp.Data;
 using GameStoreApp.Data.Cart;
 using GameStoreApp.Data.Services;
+using GameStoreApp.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +25,14 @@ builder.Services.AddScoped<IOrdersService, OrdersService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped(sc => ShoppingCart.GetShoppingCart(sc));
 
+//Authentication and authorisation
+builder.Services.AddIdentity<GameStoreUser, IdentityRole>().AddEntityFrameworkStores<GameStoreAppDbContext>();
+builder.Services.AddMemoryCache();
 builder.Services.AddSession();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+});
 
 var app = builder.Build();
 
@@ -42,6 +52,10 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
 
+//Authentication and Authorisation
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -50,5 +64,6 @@ app.MapControllerRoute(
 
 //seed database
 GameAppDbInitialiser.Seed(app);
+GameAppDbInitialiser.SeedUsersAndRolesAsync(app).Wait();
 
 app.Run();

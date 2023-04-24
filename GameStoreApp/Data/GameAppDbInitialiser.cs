@@ -1,5 +1,8 @@
 ﻿using GameStoreApp.Data.Enums;
+using GameStoreApp.Data.Static;
 using GameStoreApp.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Identity.Client;
 
 namespace GameStoreApp.Data
 {
@@ -564,6 +567,60 @@ namespace GameStoreApp.Data
                     });
                     //Saves all changes to the context to the database 
                     context.SaveChanges();
+                }
+            }
+
+
+        }
+
+        public static async Task SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
+        {
+            using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
+            {
+                //Creating roles
+                var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+                }
+
+                if (!await roleManager.RoleExistsAsync(UserRoles.User))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                }
+
+                //added users
+                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<GameStoreUser>>();
+
+                var adminUser = await userManager.FindByEmailAsync("admin@gamestoreapp.com");
+                if (adminUser == null)
+                {
+                    var newAdminUser = new GameStoreUser()
+                    {
+                        firstName = "Admin",
+                        lastName = "User",
+                        UserName = "admin",
+                        Email = "admin@gamestoreapp.com",
+                        EmailConfirmed = true
+                    };
+                    await userManager.CreateAsync(newAdminUser, "Admin@123");
+                    await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
+                }
+
+                var customerUser = await userManager.FindByEmailAsync("testcustomer@gamestoreapp.com");
+                if (customerUser == null)
+                {
+                    var newCustomerUser = new GameStoreUser()
+                    {
+                        firstName = "John",
+                        lastName = "Smith",
+                        UserName = "TestUser",
+                        Email = "testcustomer@gamestoreapp.com",
+                        EmailConfirmed = true
+                    };
+                    await userManager.CreateAsync(newCustomerUser, "Test@123");
+                    await userManager.AddToRoleAsync(newCustomerUser, UserRoles.User);
                 }
             }
         }
