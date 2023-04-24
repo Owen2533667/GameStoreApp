@@ -44,6 +44,9 @@ body {
     max-height: 150px;
 }
 
+.span-btn-group-shopping-cart {
+    padding: 5px;
+}
 
 /*for the 404 page*/
 .notfound {
