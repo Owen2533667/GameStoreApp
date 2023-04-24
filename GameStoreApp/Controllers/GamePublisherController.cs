@@ -1,11 +1,14 @@
 ﻿using GameStoreApp.Data;
 using GameStoreApp.Data.Services;
+using GameStoreApp.Data.Static;
 using GameStoreApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreApp.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin)]
     public class GamePublisherController : Controller
     {
         //Private readonly attribute IGamePublisherService, an interface that will interact to allow the retreival of data from the database.
@@ -17,6 +20,7 @@ namespace GameStoreApp.Controllers
             _service = service;
         }
 
+        [AllowAnonymous]
         // Index: A asynchronous operation that will return result of an action method called Index.
         // ueses _service.GetAllAsync() to return all data from the related table. It then passes this to the view called Index.
         public async Task<IActionResult> Index()
@@ -25,6 +29,7 @@ namespace GameStoreApp.Controllers
             return View(data);
         }
 
+        [AllowAnonymous]
         //Get: /Details/{Id}
         //Details: A asynchronous operation that will return result of an action method called Details.
         //This action method accepts a id which is an int.
