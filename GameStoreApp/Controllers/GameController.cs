@@ -1,12 +1,15 @@
 ﻿using GameStoreApp.Data;
 using GameStoreApp.Data.Services;
+using GameStoreApp.Data.Static;
 using GameStoreApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreApp.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin)]
     public class GameController : Controller
     {
         
@@ -18,19 +21,24 @@ namespace GameStoreApp.Controllers
             _service = service;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var data = await _service.GetAllAsync(p => p.GamePublisher, d => d.GameDeveloper);
             return View(data);
         }
 
+        [AllowAnonymous]
         //GET: Game/Detail/{id}
         public async Task<IActionResult> Details(int id)
         {
             var data = await _service.GetGameByIdAsync(id);
 
+            if (data == null) return View("NotFound");
+
             return View(data);
         }
+
 
         //GET Game/Create
         public async Task<IActionResult> Create()
@@ -116,6 +124,7 @@ namespace GameStoreApp.Controllers
             return RedirectToAction("Index");
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Filter(string searchString)
         {
             var data = await _service.GetAllAsync(p => p.GamePublisher, d => d.GameDeveloper);
