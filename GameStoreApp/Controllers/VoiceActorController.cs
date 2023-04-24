@@ -1,10 +1,13 @@
 ﻿using GameStoreApp.Data;
 using GameStoreApp.Data.Services;
+using GameStoreApp.Data.Static;
 using GameStoreApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameStoreApp.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin)]
     public class VoiceActorController : Controller
     {
 
@@ -16,6 +19,7 @@ namespace GameStoreApp.Controllers
             _service = service;
         }
 
+        [AllowAnonymous]
         //Index: An async IActionResult for Index that will get all voice actor data from the database and pass that data to the index view.
         public async Task<IActionResult> Index()
         {
@@ -45,6 +49,7 @@ namespace GameStoreApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [AllowAnonymous]
         //Get:
         public async Task<IActionResult> Details(int id)
         {
