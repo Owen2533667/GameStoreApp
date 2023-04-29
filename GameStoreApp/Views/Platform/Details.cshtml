@@ -1,0 +1,45 @@
+﻿@model Platform
+
+@{
+    ViewData["Title"] = "Details of Platform";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-12">
+                    <div class="card-header text-white bg-info">
+                        <p class="card-text">
+                            <h5 class="card-title">
+                                @Model.Name
+                            </h5>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <img src="@Model.ImageURL" alt="@Model.Name">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <p class="card-text">@Model.Description</p>
+                        <p class="card-text">
+                            <b>Developer: </b> @Model.PlatformDeveloper
+                        </p>
+                        <p class="card-text">
+                            <b>Price: </b> @Model.Price.ToString("c")
+                        </p>
+                        <p class="card-text"><b>Release Date: </b> @Model.ReleaseDate.ToString("dd MMM yyyy")</p>    
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card-footer">
+                        @*this is the button that will the user to the index for game.*@
+                        <a class="btn btn-outline-primary" asp-action="Index"><i class="bi bi-caret-left-fill"></i> Back</a>
+                        <a class="btn btn-outline-success float-sm-end" asp-action="Edit" asp-route-id="@Model.Id"><i class="bi bi-pencil-square"></i> Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

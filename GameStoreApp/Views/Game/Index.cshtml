@@ -31,8 +31,8 @@
                                     @item.Name
                                     @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
                                     {
-                                       <a class="text-white float-sm-left game-trash-icon" asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-trash"></i></a>
-                                      <a class="text-white float-end" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a>
+                                        <a class="text-white float-sm-left game-trash-icon" asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-trash"></i></a>
+                                        <a class="text-white float-end" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a>
                                     }
                                 </h5>
                             </p>
@@ -46,6 +46,21 @@
                             @*<p class="card-text">@item.Description</p>*@
                             <p class="card-text"><b>Publisher: </b> @item.GamePublisher.Name</p>
                             <p class="card-text"><b>Developer: </b> @item.GameDeveloper.Name</p>
+                            <p class="card-text">
+                                <b>Rating: </b>
+                                @if (item.GameRating.Name == "3" || item.GameRating.Name == "7")
+                                {
+                                    <a class="badge bg-success text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@item.GameRatingId">@item.GameRating.Name</a>
+                                }
+                                else if (item.GameRating.Name == "12" || item.GameRating.Name == "16" || item.GameRating.Name == "!")
+                                {
+                                    <a class="badge bg-warning text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@item.GameRatingId">@item.GameRating.Name</a>
+                                }
+                                else
+                                {
+                                    <a class="badge bg-danger text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@item.GameRatingId">@item.GameRating.Name</a>
+                                }
+                            </p>
                             <p class="card-text"><b>Release Date: </b> @item.ReleaseDate.ToString("dd MMM yyyy")</p>
                             <p class="card-text">
                                 <b>Status:</b>
@@ -73,5 +88,5 @@
     <partial name="_pager" model="@pager"></partial>
 </div>
 
- @await Html.PartialAsync("_CreateButton", "Game")
+@await Html.PartialAsync("_CreateButton", "Game")
 
