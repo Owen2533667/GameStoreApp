@@ -19,6 +19,13 @@ namespace GameStoreApp.Models
         //Relationships
         public List<VoiceActor_Game> VoiceActors_Games { get; set; }
 
+        public List<Platform_Game> Platforms_Games { get; set; }
+
+        //Publisher
+        public int GameRatingId { get; set; }
+        [ForeignKey("GameRatingId")]
+        public GameRating GameRating { get; set; }
+
         //Developer
         public int GameDeveloperId { get; set; }
         [ForeignKey("GameDeveloperId")]

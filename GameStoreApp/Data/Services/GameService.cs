@@ -49,7 +49,9 @@ namespace GameStoreApp.Data.Services
             var data = await _context.Games
                 .Include(p => p.GamePublisher)
                 .Include(d => d.GameDeveloper)
+                .Include(r => r.GameRating)
                 .Include(vag => vag.VoiceActors_Games).ThenInclude(va => va.VoiceActor)
+                .Include(pg => pg.Platforms_Games).ThenInclude(p => p.Platform)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return data;
@@ -61,6 +63,8 @@ namespace GameStoreApp.Data.Services
             response.VoiceActor = await _context.VoiceActors.OrderBy(x => x.FullName).ToListAsync();
             response.Publisher = await _context.GamePublishers.OrderBy(x => x.Name).ToListAsync();
             response.Developer = await _context.GameDevelopers.OrderBy(x => x.Name).ToListAsync();
+            response.Platform = await _context.Platforms.OrderBy(x => x.Name).ToListAsync();
+            response.Rating = await _context.GameRatings.OrderBy(x => x.Name).ToListAsync();
 
             return response;
 
@@ -78,6 +82,7 @@ namespace GameStoreApp.Data.Services
                 dbGame.ImageURL = data.ImageURL;
                 dbGame.GamePublisherId = data.GamePublisherId;
                 dbGame.GameDeveloperId = data.GameDeveloperId;
+                dbGame.GameRatingId = data.GameRatingId;
                 dbGame.ReleaseDate = data.ReleaseDate;
                 dbGame.GameGenre = data.GameGenre;
                 await _context.SaveChangesAsync();
@@ -88,8 +93,13 @@ namespace GameStoreApp.Data.Services
             _context.VoiceActors_Games.RemoveRange(existingVoiceActorDb);
             await _context.SaveChangesAsync();
 
+            //Remove existing platforms
+            var existingPlatformsDb = _context.Platforms_Games.Where(x => x.GameId == data.Id).ToList();
+            _context.Platforms_Games.RemoveRange(existingPlatformsDb);
+            await _context.SaveChangesAsync();
 
 
+            //
             foreach (var VoiceActorId in data.VoiceActorIds)
             {
                 var newVoiceActorGame = new VoiceActor_Game()
@@ -98,6 +108,17 @@ namespace GameStoreApp.Data.Services
                     VoiceActorId = VoiceActorId,
                 };
                 await _context.VoiceActors_Games.AddAsync(newVoiceActorGame);
+            }
+            await _context.SaveChangesAsync();
+
+            foreach (var PlatformIds in data.PlatformIds)
+            {
+                var newPlatformGame = new Platform_Game()
+                {
+                    GameId = data.Id,
+                    PlatformId = PlatformIds,
+                };
+                await _context.Platforms_Games.AddAsync(newPlatformGame);
             }
             await _context.SaveChangesAsync();
         }

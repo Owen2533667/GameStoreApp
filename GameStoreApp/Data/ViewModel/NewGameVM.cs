@@ -38,6 +38,10 @@ namespace GameStoreApp.Models
         //[Required(ErrorMessage = "Voice Actor(s) is rquired")]
         public List<int> VoiceActorIds { get; set; }
 
+        [Display(Name = "Select Platform(s)")]
+        //[Required(ErrorMessage = "Platform(s) is rquired")]
+        public List<int> PlatformIds { get; set; }
+
         [Display(Name = "Select Developer")]
         [Required(ErrorMessage = "The Developer is rquired")]
         public int GameDeveloperId { get; set; }
@@ -45,6 +49,10 @@ namespace GameStoreApp.Models
         [Display(Name = "Select Publisher")]
         [Required(ErrorMessage = "The Publisher is rquired")]
         public int GamePublisherId { get; set; }
+
+        [Display(Name = "Select Rating")]
+        [Required(ErrorMessage = "The Rating is rquired")]
+        public int GameRatingId { get; set; }
 
     }
 }

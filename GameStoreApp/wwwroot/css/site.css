@@ -29,6 +29,14 @@ body {
     padding-bottom: 40px;
 }
 
+#ImageURLPreview {
+    margin-top: 1.5rem;
+}
+
+.platform-create-button {
+    margin-top: 5px;
+}
+
 
 .login-btn {
     margin-top: 10px;
