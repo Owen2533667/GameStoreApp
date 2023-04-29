@@ -24,23 +24,31 @@ namespace GameStoreApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(int pg=1)
         {
-            var data = await _service.GetAllAsync(p => p.GamePublisher, d => d.GameDeveloper);
+            var games = await _service.GetAllAsync(p => p.GamePublisher, d => d.GameDeveloper); //uses the getAllAsync method from the IGameService and passes two parameters that will be included in the 
 
-            const int pageSize = 10;
-            if (pg < 1)
+            const int pageSize = 10; //set the page size to 10
+
+            //Checks to see if the parameter given to index is less than one.
+            if (pg < 1) // if pg is less then 1, set pg back to one. 
                 pg = 1;
 
-            int recsCount = data.Count();
+            //gets the totalItems for the pager count by getting the count of all elements in games.
+            int totalItems = games.Count();
 
-            var pager = new Pager(recsCount, pg, pageSize);
+            //creates a new Pager object with the parameters totalItems, page, and pageSize (this will be 10)
+            var pager = new Pager(totalItems, pg, pageSize);
 
-            int recSkip = (pg -1) * pageSize;
+            //the current page number - 1 times pagesize
+            int recSkip = (pg - 1) * pageSize;
 
-            var pagerData = data.Skip(recSkip).Take(pager.PageSize).ToList();
+            //pagerData will be the next element that will be displayed. 
+            var pagerData = games.Skip(recSkip).Take(pager.PageSize).ToList();//game.skip will return the elements that remain after bypassing elements that was specified. After that, The take will take the next specified elements (10) and then return this a list.
 
+            //send the pager information to the view using the view bag.
             this.ViewBag.Pager = pager;
 
-            //return View(data);
+            //return View(Games);
+            //return to the view of index with the pagerData.
             return View(pagerData);
         }
 
@@ -153,6 +161,49 @@ namespace GameStoreApp.Controllers
             }
 
             return View("Index", data);
+        }
+
+        //Get: 
+        public async Task<IActionResult> Delete(int id)
+        {
+
+            var data = await _service.GetGameByIdAsync(id);
+
+            if (data == null) return View("NotFound");
+
+            var response = new NewGameVM()
+            {
+                Id = data.Id,
+                Name = data.Name,
+                Description = data.Description,
+                Price = data.Price,
+                ImageURL = data.ImageURL,
+                ReleaseDate = data.ReleaseDate,
+                GameGenre = data.GameGenre,
+                GamePublisherId = data.GamePublisherId,
+                GameDeveloperId = data.GameDeveloperId,
+                VoiceActorIds = data.VoiceActors_Games.Select(x => x.VoiceActorId).ToList(),
+            };
+
+
+            var gameDropdownData = await _service.GetNewGameDropDownValues();
+
+            ViewBag.Publishers = new SelectList(gameDropdownData.Publisher, "Id", "Name");
+            ViewBag.Developers = new SelectList(gameDropdownData.Developer, "Id", "Name");
+            ViewBag.VoiceActors = new SelectList(gameDropdownData.VoiceActor, "Id", "FullName");
+
+            return View(response);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var dataDetails = await _service.GetGameByIdAsync(id);
+            if (dataDetails == null) return View("NotFound");
+
+            await _service.DeleteAsync(id);
+
+            return RedirectToAction(nameof(Index));
         }
 
     }
