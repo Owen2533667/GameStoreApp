@@ -32,13 +32,16 @@ namespace GameStoreApp.Controllers
         //Get: /Details/{Id}
         //Details: A asynchronous operation that will return result of an action method called Details.
         //This action method accepts a id which is an int.
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id , int returnId = 0)
         {
             //Gets a model object from the table GameDeveloper using an id passed as parameter to the action result method.
             var dataDetails = await _service.GetByIdAsync(id);
 
             //if the object retrieved is null then return the view "NotFound"
             if (dataDetails == null) return View("NotFound");
+
+            TempData["ReturnId"] = returnId;
+
 
             //return the view Details with model.
             return View(dataDetails);
