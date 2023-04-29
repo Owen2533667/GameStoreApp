@@ -31,7 +31,8 @@
                                     @item.Name
                                     @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
                                     {
-                                      <a class="text-white float-sm-end" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a>
+                                       <a class="text-white float-sm-left game-trash-icon" asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-trash"></i></a>
+                                      <a class="text-white float-end" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a>
                                     }
                                 </h5>
                             </p>
