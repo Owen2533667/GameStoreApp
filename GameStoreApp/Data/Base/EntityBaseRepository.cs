@@ -20,9 +20,10 @@ namespace GameStoreApp.Data.Base
             await _context.SaveChangesAsync();
         }
 
+        //A gereneric implementation to delete data from the database. This method is asynchronous method that returns task. The method expects a parameter of type int that will be the id of the data being removed from the database.
         public async Task DeleteAsync(int id)
         {
-            var entity = await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id); 
             EntityEntry entityEntry = _context.Entry<T>(entity);
             entityEntry.State = EntityState.Deleted;
 

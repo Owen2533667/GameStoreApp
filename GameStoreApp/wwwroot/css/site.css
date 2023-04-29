@@ -34,6 +34,11 @@ body {
     margin-top: 10px;
 }
 
+.game-trash-icon {
+    margin-left: 0.5rem;
+    
+}
+
 
 /*Previews for images*/
 #PicturePreview {
