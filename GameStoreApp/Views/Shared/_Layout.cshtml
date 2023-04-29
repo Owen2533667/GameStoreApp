@@ -26,6 +26,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Game" asp-action="Index"><i class="bi bi-controller"></i> Games</a>
                         </li>
 
+                        @*checks to see if the user is authenticated and if the user role is admin. If this is the case, then the navigation bar will include amin dropdown button that allows them to go to the publisher, developer and voice actor.*@
                         @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
                         {
                             <li class="nav-item dropdown">
@@ -48,6 +49,7 @@
                     </form>
 
                     <ul class="navbar nav">
+                        @*invokes the view component called shoppingCartSummary*@
                         @await Component.InvokeAsync("ShoppingCartSummary")
                     </ul>
 
@@ -65,7 +67,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - GameStore
+            &copy; 2023 - IGAME STORE
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

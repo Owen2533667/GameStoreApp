@@ -35,6 +35,7 @@
                         <p class="card-text"><b>Release Date: </b> @Model.ReleaseDate.ToString("dd MMM yyyy")</p>
                         <p class="card-text">
                             <b>Status:</b>
+                            @*if the current date is past the release date, then the badge will be released, if not, then the badge will become preoreder.*@
                             @if (DateTime.Now >= Model.ReleaseDate)
                             {
                                 <span class="badge bg-success text-white">RELEASED</span>
@@ -44,12 +45,14 @@
                                 <span class="badge bg-primary text-white">PRE-ORDER</span>
                             }
                         </p>
+                        @*if the current game property of type list<VoiceActors_Games> has the current count that is more than zero, display the voice actors.*@
                         @if (Model.VoiceActors_Games.Count > 0)
                         {
                             <p class="card-text">
                                 <b>Voice Actors: </b>
                                 <hr />
                                 <div class="row">
+                                    @*for each of the voice actores in the model List property called VoiceActor_Games, display their picture and name. By clicking a voice actors name, it will invoke the action details in the controller class with the voice actors id that was clicked.*@
                                     @foreach (var voiceActor in Model.VoiceActors_Games)
                                     {
                                         <div class="column text-center" style="max-width:160px;">
@@ -67,7 +70,9 @@
                 </div>
                 <div class="col-md-12">
                     <div class="card-footer">
+                        @*this is the button that will the user to the index for game.*@
                         <a class="btn btn-outline-primary" asp-action="Index"><i class="bi bi-caret-left-fill"></i> Back</a>
+                        @*this is the button that will call the action method AddToShoppingCart in the controller Orders with the id of the current game. The button will gave a icon of a cart with a plus and display "Add to Cart" with the current game price in a currency.*@
                         <a class="btn btn-success text-white float-sm-end" asp-controller="Orders" asp-action="AddToShoppingCart" asp-route-id="@Model.Id"><i class="bi bi-cart-plus"></i> Add to Cart (@Model.Price.ToString("c"))</a>
                     </div>
                 </div>
