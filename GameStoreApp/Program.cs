@@ -21,6 +21,9 @@ builder.Services.AddScoped<IGameDeveloperService, GameDeveloperService>();
 builder.Services.AddScoped<IGamePublisherService, GamePublisherService>();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IOrdersService, OrdersService>();
+builder.Services.AddScoped<IGameRatingService, GameRatingService>();
+builder.Services.AddScoped<IPlatformService, PlatformService>();
+
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped(sc => ShoppingCart.GetShoppingCart(sc));
