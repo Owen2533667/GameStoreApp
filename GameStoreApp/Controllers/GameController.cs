@@ -24,7 +24,7 @@ namespace GameStoreApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(int pg=1)
         {
-            var games = await _service.GetAllAsync(p => p.GamePublisher, d => d.GameDeveloper); //uses the getAllAsync method from the IGameService and passes two parameters that will be included in the 
+            var games = await _service.GetAllAsync(p => p.GamePublisher, d => d.GameDeveloper, r => r.GameRating); //uses the getAllAsync method from the IGameService and passes two parameters that will be included in the 
 
             const int pageSize = 10; //set the page size to 10
 
@@ -72,6 +72,8 @@ namespace GameStoreApp.Controllers
             ViewBag.Publishers = new SelectList(gameDropdownData.Publisher, "Id", "Name");
             ViewBag.Developers = new SelectList(gameDropdownData.Developer, "Id", "Name");
             ViewBag.VoiceActors = new SelectList(gameDropdownData.VoiceActor, "Id", "FullName");
+            ViewBag.Ratings = new SelectList(gameDropdownData.Rating, "Id", "Name");
+            ViewBag.Platform = new SelectList(gameDropdownData.Platform, "Id", "Name");
 
             return View();
         }
@@ -86,6 +88,8 @@ namespace GameStoreApp.Controllers
                 ViewBag.Publishers = new SelectList(gameDropdownData.Publisher, "Id", "Name");
                 ViewBag.Developers = new SelectList(gameDropdownData.Developer, "Id", "Name");
                 ViewBag.VoiceActors = new SelectList(gameDropdownData.VoiceActor, "Id", "FullName");
+                ViewBag.Ratings = new SelectList(gameDropdownData.Rating, "Id", "Name");
+                ViewBag.Platform = new SelectList(gameDropdownData.Platform, "Id", "Name");
 
                 return View(game);
             }
@@ -103,8 +107,8 @@ namespace GameStoreApp.Controllers
 
             if (data == null) return View("NotFound");
 
-            var response = new NewGameVM() 
-            { 
+            var response = new NewGameVM()
+            {
                 Id = data.Id,
                 Name = data.Name,
                 Description = data.Description,
@@ -112,9 +116,11 @@ namespace GameStoreApp.Controllers
                 ImageURL = data.ImageURL,
                 ReleaseDate = data.ReleaseDate,
                 GameGenre = data.GameGenre,
+                GameRatingId = data.GameRatingId,
                 GamePublisherId = data.GamePublisherId,
                 GameDeveloperId = data.GameDeveloperId,
                 VoiceActorIds = data.VoiceActors_Games.Select(x => x.VoiceActorId).ToList(),
+                PlatformIds = data.Platforms_Games.Select(x => x.PlatformId).ToList(),
             };
 
 
@@ -123,6 +129,8 @@ namespace GameStoreApp.Controllers
             ViewBag.Publishers = new SelectList(gameDropdownData.Publisher, "Id", "Name");
             ViewBag.Developers = new SelectList(gameDropdownData.Developer, "Id", "Name");
             ViewBag.VoiceActors = new SelectList(gameDropdownData.VoiceActor, "Id", "FullName");
+            ViewBag.Ratings = new SelectList(gameDropdownData.Rating, "Id", "Name");
+            ViewBag.Platform = new SelectList(gameDropdownData.Platform, "Id", "Name");
 
             return View(response);
         }
@@ -139,6 +147,8 @@ namespace GameStoreApp.Controllers
                 ViewBag.Publishers = new SelectList(gameDropdownData.Publisher, "Id", "Name");
                 ViewBag.Developers = new SelectList(gameDropdownData.Developer, "Id", "Name");
                 ViewBag.VoiceActors = new SelectList(gameDropdownData.VoiceActor, "Id", "FullName");
+                ViewBag.Ratings = new SelectList(gameDropdownData.Rating, "Id", "Name");
+                ViewBag.Platform = new SelectList(gameDropdownData.Platform, "Id", "Name");
 
                 return View(game);
             }
@@ -180,9 +190,11 @@ namespace GameStoreApp.Controllers
                 ImageURL = data.ImageURL,
                 ReleaseDate = data.ReleaseDate,
                 GameGenre = data.GameGenre,
+                GameRatingId = data.GameRatingId,
                 GamePublisherId = data.GamePublisherId,
                 GameDeveloperId = data.GameDeveloperId,
                 VoiceActorIds = data.VoiceActors_Games.Select(x => x.VoiceActorId).ToList(),
+                PlatformIds = data.Platforms_Games.Select(x => x.PlatformId).ToList(),
             };
 
 
@@ -191,6 +203,8 @@ namespace GameStoreApp.Controllers
             ViewBag.Publishers = new SelectList(gameDropdownData.Publisher, "Id", "Name");
             ViewBag.Developers = new SelectList(gameDropdownData.Developer, "Id", "Name");
             ViewBag.VoiceActors = new SelectList(gameDropdownData.VoiceActor, "Id", "FullName");
+            ViewBag.Ratings = new SelectList(gameDropdownData.Rating, "Id", "Name");
+            ViewBag.Platform = new SelectList(gameDropdownData.Platform, "Id", "Name");
 
             return View(response);
         }
