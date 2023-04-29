@@ -22,10 +22,26 @@ namespace GameStoreApp.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg=1)
         {
             var data = await _service.GetAllAsync(p => p.GamePublisher, d => d.GameDeveloper);
-            return View(data);
+
+            const int pageSize = 10;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = data.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg -1) * pageSize;
+
+            var pagerData = data.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            //return View(data);
+            return View(pagerData);
         }
 
         [AllowAnonymous]
