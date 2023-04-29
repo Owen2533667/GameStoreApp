@@ -42,6 +42,9 @@ namespace GameStoreApp.Migrations
                     b.Property<int>("GamePublisherId")
                         .HasColumnType("int");
 
+                    b.Property<int>("GameRatingId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
 
@@ -59,6 +62,8 @@ namespace GameStoreApp.Migrations
                     b.HasIndex("GameDeveloperId");
 
                     b.HasIndex("GamePublisherId");
+
+                    b.HasIndex("GameRatingId");
 
                     b.ToTable("Games");
                 });
@@ -111,6 +116,31 @@ namespace GameStoreApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("GamePublishers");
+                });
+
+            modelBuilder.Entity("GameStoreApp.Models.GameRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Logo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GameRatings");
                 });
 
             modelBuilder.Entity("GameStoreApp.Models.GameStoreUser", b =>
@@ -200,9 +230,11 @@ namespace GameStoreApp.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -234,6 +266,52 @@ namespace GameStoreApp.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems");
+                });
+
+            modelBuilder.Entity("GameStoreApp.Models.Platform", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PlatformDeveloper")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Platforms");
+                });
+
+            modelBuilder.Entity("GameStoreApp.Models.Platform_Game", b =>
+                {
+                    b.Property<int>("PlatformId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PlatformId", "GameId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("Platforms_Games");
                 });
 
             modelBuilder.Entity("GameStoreApp.Models.ShoppingCartItem", b =>
@@ -449,9 +527,28 @@ namespace GameStoreApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("GameStoreApp.Models.GameRating", "GameRating")
+                        .WithMany("Games")
+                        .HasForeignKey("GameRatingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("GameDeveloper");
 
                     b.Navigation("GamePublisher");
+
+                    b.Navigation("GameRating");
+                });
+
+            modelBuilder.Entity("GameStoreApp.Models.Order", b =>
+                {
+                    b.HasOne("GameStoreApp.Models.GameStoreUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GameStoreApp.Models.OrderItem", b =>
@@ -471,6 +568,25 @@ namespace GameStoreApp.Migrations
                     b.Navigation("Game");
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("GameStoreApp.Models.Platform_Game", b =>
+                {
+                    b.HasOne("GameStoreApp.Models.Game", "Game")
+                        .WithMany("Platforms_Games")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GameStoreApp.Models.Platform", "Platform")
+                        .WithMany("Platforms_Games")
+                        .HasForeignKey("PlatformId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Platform");
                 });
 
             modelBuilder.Entity("GameStoreApp.Models.ShoppingCartItem", b =>
@@ -556,6 +672,8 @@ namespace GameStoreApp.Migrations
 
             modelBuilder.Entity("GameStoreApp.Models.Game", b =>
                 {
+                    b.Navigation("Platforms_Games");
+
                     b.Navigation("VoiceActors_Games");
                 });
 
@@ -569,9 +687,19 @@ namespace GameStoreApp.Migrations
                     b.Navigation("Games");
                 });
 
+            modelBuilder.Entity("GameStoreApp.Models.GameRating", b =>
+                {
+                    b.Navigation("Games");
+                });
+
             modelBuilder.Entity("GameStoreApp.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("GameStoreApp.Models.Platform", b =>
+                {
+                    b.Navigation("Platforms_Games");
                 });
 
             modelBuilder.Entity("GameStoreApp.Models.VoiceActor", b =>
