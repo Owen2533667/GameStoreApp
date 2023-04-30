@@ -80,6 +80,15 @@ namespace GameStoreApp.Data
 						    //URL path
                             PictureURL = "/Images/VoiceActorImages/Cameron-Monaghan.jpg"
                         },
+                        new VoiceActor()
+                        {
+                            //Name of the VoiceActor
+                            FullName = "N/A",
+                            //VoiceActors Bio
+                            Bio = "Placeholder. There is currently no Voice Actors Listed",
+						    //URL path
+                            PictureURL = "/Images/VoiceActorImages/place-holder-image.png"
+                        },
                     });
                     //Saves all changes to the context to the database 
                     context.SaveChanges();
