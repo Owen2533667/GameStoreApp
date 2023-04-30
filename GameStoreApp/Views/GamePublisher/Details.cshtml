@@ -4,48 +4,127 @@
     ViewData["Title"] = "Game Publishers Details";
 }
 
-<div class="row text">
+<div class="row">
     <div class="col-md-8 offset-2">
-        <p>
-            <h1>Details of @Model.Name</h1>
-        </p>
-        <div class="row">
-            <div class="col-md-8 offset-2">
-                <div class="form-group text-center">
-                    <img class="border-info rounded-circle" id="LogoPreview" />
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-12">
+                    <div class="card-header text-white bg-info">
+                        <p class="card-text">
+                            <h5 class="card-title">
+                                @*Displays the Publisher name*@
+                                @Model.Name
+                            </h5>
+                        </p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Logo" class="control-label"></label>
-                    <input asp-for="Logo" class="form-control" readonly />
-                    <span asp-validation-for="Logo" class="text-danger"></span>
+                <div class="col-md-4 justify-content-center">
+                    @*Displays the Publisher logo*@
+                    <img src="@Model.Logo" alt="@Model.Name" style="width: 250px;">
                 </div>
-                <div class="form-group">
-                    <label asp-for="Name" class="control-label"></label>
-                    <input asp-for="Name" class="form-control" readonly />
-                    <span asp-validation-for="Name" class="text-danger"></span>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <p class="card-text">
+                            <b>Description: </b>
+                            @Model.Description
+                        </p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Description" class="control-label"></label>
-                    <input asp-for="Description" class="form-control" readonly />
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-                <div class="form-group" style="padding-top: 2.5rem;">
-                    @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
-                    {
-                        <a class="btn btn-outline-success float-sm-end" asp-action="Edit" asp-route-id="@Model.Id"><i class="bi bi-pencil-square"></i> Edit</a>
-                    }
-                    @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
-                    {
-                        <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-caret-left-fill"></i> Back</a>
-                    }
-                    else
-                    {
-                        <a class="btn btn-outline-secondary" asp-controller="Game" asp-action="Details" asp-route-id="@TempData["ReturnId"]"><i class="bi bi-caret-left-fill"></i> Back</a>
-                    }
+                <div class="col-md-12">
+                    <div class="card-footer">
+
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                        {
+                            @*If the user is authenticated and has the role admin, then render the edit button. *@
+                            <a class="btn btn-outline-success float-sm-end" asp-action="Edit" asp-route-id="@Model.Id"><i class="bi bi-pencil-square"></i> Edit</a>
+                        }
+
+
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                        {
+                            @*If the user is authenticated and has the role admin, then use the normal back button that takes the user to index for Publisher *@
+                            <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-caret-left-fill"></i> Back</a>
+                        }
+                        else
+                        {
+                            @*else use the back button that returns to game details view with the return id *@
+                            <a class="btn btn-outline-secondary" asp-controller="Game" asp-action="Details" asp-route-id="@TempData["ReturnId"]"><i class="bi bi-caret-left-fill"></i> Back</a>
+                        }
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<div class="row">
+    <div class="text-center">
+        <h3 class="h-three-product-list">Games published by @Model.Name</h3>
+    </div>
+    @if (Model.Games != null)
+    {
+        @foreach (var game in Model.Games)
+        {
+            <div class="col-md-4 col-xs-6 border-primary mb-3">
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-12">
+                            <div class="card-header bg-gradient text-white bg-info">
+                                <p class="card-text">
+                                    <h5 class="card-title">
+                                        @game.Name
+                                    </h5>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 justify-content-center">
+                            <img src="@game.ImageURL" style="width: 100%; height: 280px" alt="@game.Name">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <b>PEGI: </b>
+                                    @if (game.GameRating.Name == "3" || game.GameRating.Name == "7")
+                                    {
+                                        <a class="badge bg-success text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@game.GameRatingId" asp-route-returnId="@game.Id"><b>@game.GameRating.Name</b></a>
+                                    }
+                                    else if (game.GameRating.Name == "12" || game.GameRating.Name == "16" || game.GameRating.Name == "!")
+                                    {
+                                        <a class="badge bg-warning text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@game.GameRatingId" asp-route-returnId="@game.Id"> <b>@game.GameRating.Name</b></a>
+                                    }
+                                    else
+                                    {
+                                        <a class="badge bg-danger text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@game.GameRatingId" asp-route-returnId="@game.Id"><b>@game.GameRating.Name</b></a>
+                                    }
+                                </p>
+                                <p class="card-text"><b>Release Date: </b> @game.ReleaseDate.ToString("dd MMM yyyy")</p>
+                                <p class="card-text">
+                                    <b>Status:</b>
+                                    @if (DateTime.Now >= game.ReleaseDate)
+                                    {
+                                        <span class="badge bg-success text-white">RELEASED</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-primary text-white">PRE-ORDER</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card-footer">
+                                @*When the detail button is clicked on one of the games card for this publisher, then route to details view for that game id while route the name of the controller. This is to allow the user to click back and return to the publisher agian.*@
+                                <a class="btn btn-outline-primary float-sm-end" asp-controller="Game" asp-action="Details" asp-route-id="@game.Id" asp-route-returnController="GamePublisher"><i class="bi bi-eye-fill"></i> Show Detail</a>
+                                @*This will appear as a button on the game card on for the publisher details view, when the user clicks it, it will add the game with that id to their shopping cart.*@
+                                <a class="btn btn-success text-white" asp-controller="Orders" asp-action="AddToShoppingCart" asp-route-id="@game.Id"><i class="bi bi-cart-plus"></i> Add (@game.Price.ToString("c"))</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
 </div>
 
 @section Scripts {
