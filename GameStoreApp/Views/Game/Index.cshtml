@@ -29,7 +29,7 @@
                             <p class="card-text">
                                 <h5 class="card-title">
                                     @item.Name
-                                    @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                                    @if (User.Identity!.IsAuthenticated && User.IsInRole("admin"))
                                     {
                                         <a class="text-white float-sm-left game-trash-icon" asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-trash"></i></a>
                                         <a class="text-white float-end" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a>
@@ -48,18 +48,18 @@
                             <p class="card-text"><b>Developer: </b> @item.GameDeveloper.Name</p>
                             @*The following cart text section uses if statements to check which rating the game is then uses the badge for that rating.*@
                             <p class="card-text">
-                                <b>Rating: </b>
-                                @if (item.GameRating.Name == "3" || item.GameRating.Name == "7")
+                                <b>PEGI: </b>
+                                @if (@item.GameRating.Name == "3" || @item.GameRating.Name == "7")
                                 {
-                                    <a class="badge bg-success text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@item.GameRatingId" asp-route-returnId="@item.Id"><b>@item.GameRating.Name</b></a>
+                                    <span class="badge bg-success text-white">@item.GameRating.Name</span>
                                 }
-                                else if (item.GameRating.Name == "12" || item.GameRating.Name == "16" || item.GameRating.Name == "!")
+                                else if (@item.GameRating.Name == "12" || @item.GameRating.Name == "16" || @item.GameRating.Name == "!")
                                 {
-                                    <a class="badge bg-warning text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@item.GameRatingId" asp-route-returnId="@item.Id"> <b>@item.GameRating.Name</b></a>
+                                    <span class="badge bg-warning text-white">@item.GameRating.Name</span>
                                 }
                                 else
                                 {
-                                    <a class="badge bg-danger text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@item.GameRatingId" asp-route-returnId="@item.Id"><b>@item.GameRating.Name</b></a>
+                                    <span class="badge bg-danger text-white">@item.GameRating.Name</span>
                                 }
                             </p>
                             <p class="card-text"><b>Release Date: </b> @item.ReleaseDate.ToString("dd MMM yyyy")</p>
