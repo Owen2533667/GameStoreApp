@@ -51,11 +51,14 @@ namespace GameStoreApp.Controllers
 
         [AllowAnonymous]
         //Get:
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id, int returnId = 0)
         {
             var dataDetails = await _service.GetByIdAsync(id);
 
             if (dataDetails == null) return View("NotFound");
+
+            TempData["ReturnId"] = returnId;
+
             return View(dataDetails);
         }
 

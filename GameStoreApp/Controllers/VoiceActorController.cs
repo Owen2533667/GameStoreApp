@@ -50,12 +50,17 @@ namespace GameStoreApp.Controllers
         }
 
         [AllowAnonymous]
-        //Get:
-        public async Task<IActionResult> Details(int id)
+        //Get: VoiceActor/Details/{Id}
+        //Details: A asynchronous operation that returns a Task<IActionResult> called details. The method accepts two int values, the id of the voice actor to get and pass to the view. The other int is an optional with a defualt of 0. It will get this vaule from the game details, when the user clicks on the <a> for game voice actor. The second is used to store the return id, so when the user clcisk the back button it will return to the game detials with that id.
+        public async Task<IActionResult> Details(int id , int returnId = 0)
         {
             var dataDetails = await _service.GetByIdAsync(id);
 
             if (dataDetails == null) return View("NotFound");
+
+            //pass temp data of the return id to the view.
+            TempData["ReturnId"] = returnId;
+
             return View(dataDetails);
         }
 
