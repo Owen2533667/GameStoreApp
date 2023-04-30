@@ -35,7 +35,15 @@
                         <a class="btn btn-outline-success float-sm-end" asp-action="Edit" asp-route-id="@Model.Id"><i class="bi bi-pencil-square"></i> Edit</a>
                     }
 
-                    <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-caret-left-fill"></i> Back</a>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                    {
+                        <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-caret-left-fill"></i> Back</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-secondary" asp-controller="Game" asp-action="Details" asp-route-id="@TempData["ReturnId"]"><i class="bi bi-caret-left-fill"></i> Back</a>
+                    }
+
                 </div>
             </div>
         </div>

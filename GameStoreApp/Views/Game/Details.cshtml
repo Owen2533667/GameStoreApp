@@ -26,11 +26,11 @@
                         <p class="card-text">@Model.Description</p>
                         <p class="card-text">
                             <b>Publisher: </b>
-                            <a asp-controller="GamePublisher" asp-action="Details" asp-route-id="@Model.GamePublisherId">@Model.GamePublisher.Name</a>
+                            <a asp-controller="GamePublisher" asp-action="Details" asp-route-id="@Model.GamePublisherId" asp-route-returnId="@Model.Id">@Model.GamePublisher.Name</a>
                         </p>
                         <p class="card-text">
                             <b>Developer: </b>
-                            <a asp-controller="GameDeveloper" asp-action="Details" asp-route-id="@Model.GameDeveloperId">@Model.GameDeveloper.Name</a>
+                            <a asp-controller="GameDeveloper" asp-action="Details" asp-route-id="@Model.GameDeveloperId" asp-route-returnId="@Model.Id">@Model.GameDeveloper.Name</a>
                         </p>
                         <p class="card-text"><b>Release Date: </b> @Model.ReleaseDate.ToString("dd MMM yyyy")</p>
                         <p class="card-text">
@@ -45,6 +45,26 @@
                                 <span class="badge bg-primary text-white">PRE-ORDER</span>
                             }
                         </p>
+                        @*if the current game property of type list<Platform_Game> has the current count that is more than zero, display the platforms.*@
+                        @if (Model.Platforms_Games.Count > 0)
+                        {
+                            <p class="card-text">
+                                <b>Platform: </b>
+                                <hr />
+                                <div class="row">
+                                    @*for each of the platforms in the model List property called Platform_Game, display their picture and name. By clicking a platform name, it will invoke the action details in the controller class with platform id that was clicked.*@
+                                    @foreach (var platform in Model.Platforms_Games)
+                                    {
+                                        <div class="column text-center" style="max-width:160px;">
+                                            <img src="@platform.Platform.ImageURL" class="boarder-info VoiceActorImages" />
+                                            <br />
+                                            <a asp-controller="Platform" asp-action="Details" asp-route-id="@platform.PlatformId" asp-route-returnId="@Model.Id">@platform.Platform.Name</a>
+                                        </div>
+                                    }
+                                </div>
+                            </p>
+
+                        }
                         @*if the current game property of type list<VoiceActors_Games> has the current count that is more than zero, display the voice actors.*@
                         @if (Model.VoiceActors_Games.Count > 0)
                         {
@@ -58,7 +78,7 @@
                                         <div class="column text-center" style="max-width:160px;">
                                             <img src="@voiceActor.VoiceActor.PictureURL" class="boarder-info rounded-circle VoiceActorImages" />
                                             <br />
-                                            <a asp-controller="VoiceActor" asp-action="Details" asp-route-id="@voiceActor.VoiceActorId">@voiceActor.VoiceActor.FullName</a>
+                                            <a asp-controller="VoiceActor" asp-action="Details" asp-route-id="@voiceActor.VoiceActorId" asp-route-returnId="@Model.Id">@voiceActor.VoiceActor.FullName</a>
                                         </div>
                                     }
                                 </div>

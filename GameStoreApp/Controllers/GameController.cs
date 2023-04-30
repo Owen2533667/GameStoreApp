@@ -24,7 +24,7 @@ namespace GameStoreApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(int pg=1)
         {
-            var games = await _service.GetAllAsync(p => p.GamePublisher, d => d.GameDeveloper, r => r.GameRating); //uses the getAllAsync method from the IGameService and passes two parameters that will be included in the 
+            var games = await _service.GetAllAsync(p => p.GamePublisher, d => d.GameDeveloper, r => r.GameRating); //uses the getAllAsync method from the IGameService and passes three parameters that will be included in the result
 
             const int pageSize = 10; //set the page size to 10
 

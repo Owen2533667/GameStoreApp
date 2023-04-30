@@ -31,15 +31,17 @@ namespace GameStoreApp.Controllers
 
         [AllowAnonymous]
         //Get: /Details/{Id}
-        //Details: A asynchronous operation that will return result of an action method called Details.
-        //This action method accepts a id which is an int.
-        public async Task<IActionResult> Details(int id)
+        //Details: A asynchronous operation that returns a Task<IActionResult> called details. The method accepts two int values, the id of the publisher to get and pass to the view. The other int is an optional with a defualt of 0. It will get this vaule from the game details, when the user clicks on the <a> for game publisher. The second is used to store the return id, so when the user clicks the back button it will return to the game detials with that id.
+        public async Task<IActionResult> Details(int id, int returnId = 0)
         {
             //Gets a model object from the related table using an id passed as parameter to the action result method.
             var dataDetails = await _service.GetByIdAsync(id);
 
             //if the object retrieved is null then return the view "NotFound"
             if (dataDetails == null) return View("NotFound");
+
+            //pass temp data of the return id to the view.
+            TempData["ReturnId"] = returnId;
 
             //return the view Details with model.
             return View(dataDetails);
