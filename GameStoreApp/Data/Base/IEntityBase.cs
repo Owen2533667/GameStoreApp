@@ -1,6 +1,6 @@
 ﻿namespace GameStoreApp.Data.Base
 {
-    public interface IEntityBase
+    public interface IEntityBase 
     {
         int Id { get; set; }
     }

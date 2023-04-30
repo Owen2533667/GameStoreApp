@@ -12,23 +12,29 @@
                     <div class="card-header text-white bg-info">
                         <p class="card-text">
                             <h5 class="card-title">
+                                @*Displays the platform name*@
                                 @Model.Name
                             </h5>
                         </p>
                     </div>
                 </div>
                 <div class="col-md-4">
+                    @*Displays the platform image*@
                     <img src="@Model.ImageURL" alt="@Model.Name">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
+                        @*Displays the platform description*@
                         <p class="card-text">@Model.Description</p>
                         <p class="card-text">
+                            @*Displays the platform developer*@
                             <b>Developer: </b> @Model.PlatformDeveloper
                         </p>
                         <p class="card-text">
+                            @*the price of the platform to string and displayed as a currency*@
                             <b>Price: </b> @Model.Price.ToString("c")
                         </p>
+                        @*Displays the platform release date in the format of day (02) month (Oct) year (2020)*@
                         <p class="card-text"><b>Release Date: </b> @Model.ReleaseDate.ToString("dd MMM yyyy")</p>    
                     </div>
                 </div>
@@ -37,14 +43,18 @@
 
                         @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
                         {
+                            @*If the user is authenticated and has the role admin, then render the edit button. *@
                             <a class="btn btn-outline-success float-sm-end" asp-action="Edit" asp-route-id="@Model.Id"><i class="bi bi-pencil-square"></i> Edit</a>
                         }
 
+                        
                         @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
                         {
+                            @*If the user is authenticated and has the role admin, then use the normal back button that takes the user to index for platform *@
                             <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-caret-left-fill"></i> Back</a>
                         } else
                         {
+                            @*else use the back button that returns to game details view with the return id *@
                             <a class="btn btn-outline-secondary" asp-controller="Game" asp-action="Details" asp-route-id="@TempData["ReturnId"]"><i class="bi bi-caret-left-fill"></i> Back</a>
                         }
 
