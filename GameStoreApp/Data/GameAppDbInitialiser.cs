@@ -421,7 +421,7 @@ namespace GameStoreApp.Data
                             //Genre of the game
                             GameGenre = GameGenre.GrandStrategy,
 						    //URL path
-                            ImageURL = "/Images/GameImage/Crusader-Kings-III.jpg",
+                            ImageURL = "/Images/GameImage/Stellaris.jpg",
                             GameRatingId = 2,
                             GameDeveloperId = 2,
                             GamePublisherId = 5
