@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <img src="@Model.ImageURL" alt="@Model.Name">
+                    <img src="@Model.ImageURL" alt="@Model.Name" style="width: 250px;">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
@@ -31,6 +31,21 @@
                         <p class="card-text">
                             <b>Developer: </b>
                             <a asp-controller="GameDeveloper" asp-action="Details" asp-route-id="@Model.GameDeveloperId" asp-route-returnId="@Model.Id">@Model.GameDeveloper.Name</a>
+                        </p>
+                        <p class="card-text">
+                            <b>PEGI: </b>
+                            @if (@Model.GameRating.Name == "3" || @Model.GameRating.Name == "7")
+                            {
+                                <a class="badge bg-success text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@Model.GameRatingId" asp-route-returnId="@Model.Id"><b>@Model.GameRating.Name</b></a>
+                            }
+                            else if (@Model.GameRating.Name == "12" || @Model.GameRating.Name == "16" || @Model.GameRating.Name == "!")
+                            {
+                                <a class="badge bg-warning text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@Model.GameRatingId" asp-route-returnId="@Model.Id"> <b>@Model.GameRating.Name</b></a>
+                            }
+                            else
+                            {
+                                <a class="badge bg-danger text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@Model.GameRatingId" asp-route-returnId="@Model.Id"><b>@Model.GameRating.Name</b></a>
+                            }
                         </p>
                         <p class="card-text"><b>Release Date: </b> @Model.ReleaseDate.ToString("dd MMM yyyy")</p>
                         <p class="card-text">
@@ -90,8 +105,22 @@
                 </div>
                 <div class="col-md-12">
                     <div class="card-footer">
-                        @*this is the button that will the user to the index for game.*@
-                        <a class="btn btn-outline-primary" asp-action="Index"><i class="bi bi-caret-left-fill"></i> Back</a>
+                        @if (TempData["returnController"]!.ToString() == "Game")
+                        {
+                            @*this is the button that will the user to the index for game.*@
+                            <a class="btn btn-outline-primary" asp-action="Index"><i class="bi bi-caret-left-fill"></i> Back</a>
+                        }
+                        else if (TempData["returnController"]!.ToString() == "GameDeveloper")
+                        {
+                            @*this is the button that will the user to the index for game.*@
+                            <a class="btn btn-outline-primary" asp-controller="@TempData["returnController"]" asp-action="Details" asp-route-returnId="@Model.Id" asp-route-Id="@Model.GameDeveloperId"><i class="bi bi-caret-left-square-fill"></i> Back</a>
+                        }
+                        else if (TempData["returnController"]!.ToString() == "GamePublisher")
+                        {
+                            @*this is the button that will the user to the index for game.*@
+                            <a class="btn btn-outline-primary" asp-controller="@TempData["returnController"]" asp-action="Details" asp-route-returnId="@Model.Id" asp-route-Id="@Model.GamePublisherId"><i class="bi bi-caret-left-square-fill"></i> Back</a>
+                        }
+
                         @*this is the button that will call the action method AddToShoppingCart in the controller Orders with the id of the current game. The button will gave a icon of a cart with a plus and display "Add to Cart" with the current game price in a currency.*@
                         <a class="btn btn-success text-white float-sm-end" asp-controller="Orders" asp-action="AddToShoppingCart" asp-route-id="@Model.Id"><i class="bi bi-cart-plus"></i> Add to Cart (@Model.Price.ToString("c"))</a>
                     </div>

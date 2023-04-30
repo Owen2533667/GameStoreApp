@@ -7,7 +7,9 @@ namespace GameStoreApp.Data.Services
     public class VoiceActorService : EntityBaseRepository<VoiceActor>, IVoiceActorService
     {
 
+        public VoiceActorService(GameStoreAppDbContext context) : base(context) 
+        { 
+        }
 
-        public VoiceActorService(GameStoreAppDbContext context) : base(context) { }
     }
 }

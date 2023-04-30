@@ -4,59 +4,55 @@
     ViewData["Title"] = "Add new Voice Actor";
 }
 
-<div class="row text">
+<div class="row">
     <div class="col-md-8 offset-2">
-        <p>
-            <h1>Details of @Model.FullName</h1>
-        </p>
-        <div class="row">
-            <div class="col-md-8 offset-2" id="create-form-voice-actor">
-                <div class="form-group text-center">
-                    <img class="border-info rounded-circle" id="PicturePreview" />
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-12">
+                    <div class="card-header text-white bg-info">
+                        <p class="card-text">
+                            <h5 class="card-title">
+                                @*Displays the voice actors name*@
+                                @Model.FullName
+                            </h5>
+                        </p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="PictureURL" class="control-label"></label>
-                    <input asp-for="PictureURL" class="form-control" readonly />
-                    <span asp-validation-for="PictureURL" class="text-danger"></span>
+                <div class="col-md-4 justify-content-center">
+                    @*Displays the voice actor picture*@
+                    <img src="@Model.PictureURL" alt="@Model.FullName" style="width: 250px;">
                 </div>
-                <div class="form-group">
-                    <label asp-for="FullName" class="control-label"></label>
-                    <input asp-for="FullName" class="form-control" readonly />
-                    <span asp-validation-for="FullName" class="text-danger"></span>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <p class="card-text">
+                            <b>Bio: </b>
+                            @Model.Bio
+                        </p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Bio" class="control-label"></label>
-                    <input asp-for="Bio" class="form-control" readonly />
-                    <span asp-validation-for="Bio" class="text-danger"></span>
-                </div>
-                <div class="form-group" style="padding-top: 2.5rem;">
-                    @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
-                    {
-                        <a class="btn btn-outline-success float-sm-end" asp-action="Edit" asp-route-id="@Model.Id"><i class="bi bi-pencil-square"></i> Edit</a>
-                    }
-                    
-                    @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
-                    {
-                        <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-caret-left-fill"></i> Back</a>
-                    }
-                    else
-                    {
-                        <a class="btn btn-outline-secondary" asp-controller="Game" asp-action="Details" asp-route-id="@TempData["ReturnId"]"><i class="bi bi-caret-left-fill"></i> Back</a>
-                    }
+                <div class="col-md-12">
+                    <div class="card-footer">
 
+                        @if (User.Identity!.IsAuthenticated && User.IsInRole("admin"))
+                        {
+                            @*If the user is authenticated and has the role admin, then render the edit button. *@
+                            <a class="btn btn-outline-success float-sm-end" asp-action="Edit" asp-route-id="@Model.Id"><i class="bi bi-pencil-square"></i> Edit</a>
+                        }
+
+
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                        {
+                            @*If the user is authenticated and has the role admin, then use the normal back button that takes the user to index for platform *@
+                            <a class="btn btn-outline-secondary" asp-action="Index"><i class="bi bi-caret-left-fill"></i> Back</a>
+                        }
+                        else
+                        {
+                            @*else use the back button that returns to game details view with the return id *@
+                            <a class="btn btn-outline-secondary" asp-controller="Game" asp-action="Details" asp-route-id="@TempData["ReturnId"]"><i class="bi bi-caret-left-fill"></i> Back</a>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        if ($('#create-form-voice-actor')) {
-            $(document).ready(function () {
-                var output = document.getElementById('PicturePreview');
-                output.src = $('#PictureURL').val();
-            })
-        }
-    </script>
-}

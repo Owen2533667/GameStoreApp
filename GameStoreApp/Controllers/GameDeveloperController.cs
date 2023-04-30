@@ -35,7 +35,7 @@ namespace GameStoreApp.Controllers
         public async Task<IActionResult> Details(int id , int returnId = 0)
         {
             //Gets a model object from the table GameDeveloper using an id passed as parameter to the action result method.
-            var dataDetails = await _service.GetByIdAsync(id);
+            var dataDetails = await _service.GetDeveloperByIdAsync(id);
 
             //if the object retrieved is null then return the view "NotFound"
             if (dataDetails == null) return View("NotFound");

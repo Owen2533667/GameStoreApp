@@ -5,5 +5,7 @@ namespace GameStoreApp.Data.Services
 {
     public interface IGameDeveloperService : IEntityBaseRepository<GameDeveloper>
     {
+
+        Task<GameDeveloper> GetDeveloperByIdAsync(int id);
     }
 }

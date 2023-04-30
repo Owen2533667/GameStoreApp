@@ -53,12 +53,14 @@ namespace GameStoreApp.Controllers
         }
 
         [AllowAnonymous]
-        //GET: Game/Detail/{id}
-        public async Task<IActionResult> Details(int id)
+        //GET: Game/Detail/{id}?{returnController}?{returnId}
+        public async Task<IActionResult> Details(int id, string returnController = "Game")
         {
             var data = await _service.GetGameByIdAsync(id);
 
             if (data == null) return View("NotFound");
+
+            TempData["returnController"] = returnController;
 
             return View(data);
         }
@@ -165,7 +167,7 @@ namespace GameStoreApp.Controllers
 
             if(!string.IsNullOrEmpty(searchString))
             {
-                var filteredData = data.Where(x => x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) || x.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+                var filteredData = data.Where(x => x.Name!.Contains(searchString, StringComparison.OrdinalIgnoreCase) || x.Description!.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
                     
                 return View("Index", filteredData);
             }
