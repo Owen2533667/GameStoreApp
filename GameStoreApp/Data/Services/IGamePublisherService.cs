@@ -5,5 +5,6 @@ namespace GameStoreApp.Data.Services
 {
     public interface IGamePublisherService : IEntityBaseRepository<GamePublisher>
     {
+        Task<GamePublisher> GetPublisherByIdAsync(int id);
     }
 }
