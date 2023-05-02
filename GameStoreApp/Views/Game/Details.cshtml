@@ -10,7 +10,7 @@
         <div class="card mb-3">
             <div class="row g-0">
                 <div class="col-md-12">
-                    <div class="card-header text-white bg-info">
+                    <div class="card-header text-white bg-danger">
                         <p class="card-text">
                             <h5 class="card-title">
                                 @Model.Name
@@ -18,8 +18,8 @@
                         </p>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <img src="@Model.ImageURL" alt="@Model.Name" style="width: 250px;">
+                <div class="col-md-4 align-content-center">
+                    <img src="@Model.ImageURL" alt="@Model.Name" style="width: 250px; border: 2px solid #555;">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
@@ -46,6 +46,10 @@
                             {
                                 <a class="badge bg-danger text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@Model.GameRatingId" asp-route-returnId="@Model.Id"><b>@Model.GameRating.Name</b></a>
                             }
+                        </p>
+                        <p class="card-text">
+                            <b>Genre: </b>
+                            @Model.GameGenre
                         </p>
                         <p class="card-text"><b>Release Date: </b> @Model.ReleaseDate.ToString("dd MMM yyyy")</p>
                         <p class="card-text">
