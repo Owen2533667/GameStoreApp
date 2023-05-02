@@ -14,6 +14,7 @@ namespace GameStoreApp.Data.Services
             _context = context;
         }
 
+        //AddNewGameAsync is an asynchronos method that returns a task and accepts a newGameVM as a parameter. The purpose of this method is to add a new game into the related game table and other relationship data between game and voice actor/platform.
         public async Task AddNewGameAsync(NewGameVM data)
         {
             var newGame = new Game()
@@ -22,6 +23,7 @@ namespace GameStoreApp.Data.Services
                 Description = data.Description,
                 Price = data.Price,
                 ImageURL = data.ImageURL,
+                GameRatingId = data.GameRatingId,
                 GamePublisherId = data.GamePublisherId,
                 GameDeveloperId = data.GameDeveloperId,
                 ReleaseDate = data.ReleaseDate,
@@ -39,6 +41,16 @@ namespace GameStoreApp.Data.Services
                     VoiceActorId = VoiceActorId,
                 };
                 await _context.VoiceActors_Games.AddAsync(newVoiceActorGame);
+            }
+
+            foreach (var PlatformId in data.PlatformIds)
+            {
+                var newPlatformGame = new Platform_Game()
+                {
+                    GameId = newGame.Id,
+                    PlatformId = PlatformId,
+                };
+                await _context.Platforms_Games.AddAsync(newPlatformGame);
             }
 
             await _context.SaveChangesAsync();
