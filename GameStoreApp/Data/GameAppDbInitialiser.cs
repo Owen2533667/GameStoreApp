@@ -193,6 +193,18 @@ namespace GameStoreApp.Data
                             PlatformDeveloper = "Microsoft",
 						    //URL path
                             ImageURL = "/Images/PlatformImages/Xbox_Series_X_S_black.svg"
+                        },
+                        new Platform()
+                        {
+                            //Name of the Platform
+                            Name = "PC",
+                            //Platform description
+                            Description = "A gaming computer, also known as a gaming PC, is a specialized personal computer designed for playing video games at high standards. Gaming PCs typically differ from mainstream personal computers by using high-performance video cards, a high core-count central processing units with raw performance and higher-performance RAM. Gaming PCs are also used for other demanding tasks such as video editing.[1] Gamers and computer enthusiasts may choose to overclock their CPUs and GPUs in order to gain extra performance. The added power draw needed to overclock either processing units often requires additional cooling, usually by air cooling or water cooling.",
+                            ReleaseDate = new DateTime(2020, 11, 10),
+                            Price = 0,
+                            PlatformDeveloper = "Verious",
+						    //URL path
+                            ImageURL = "/Images/PlatformImages/PC.png"
                         }
                     });
                     //Saves all changes to the context to the database 
@@ -650,6 +662,42 @@ namespace GameStoreApp.Data
                             GameRatingId = 5,
                             GameDeveloperId = 3,
                             GamePublisherId = 3
+                        },
+                        new Game()
+                        {
+                            //Name of the game
+                            Name = "Hearts of Iron IV ",
+                            //Description of the game
+                            Description = "Hearts of Iron IV is a grand strategy computer wargame developed by Paradox Development Studio and published by Paradox Interactive. It was released worldwide on 6 June 2016. It is the sequel to 2009’s Hearts of Iron III and the fourth main installment in the Hearts of Iron series. Like previous games in the series, Hearts of Iron IV is a grand strategy wargame that focuses on World War II. The player may take control of any nation in the world in either 1936 or 1939 and lead them to victory or defeat against other countries.",
+                            //Release date of the game
+                            ReleaseDate = new DateTime(2016, 06, 06),
+                            //Price of the game
+                            Price = 34.99,
+                            //Genre of the game
+                            GameGenre = GameGenre.GrandStrategy,
+						    //URL path
+                            ImageURL = "/Images/GameImage/Hearts_of_Iron_IV.jpg",
+                            GameRatingId = 2,
+                            GameDeveloperId = 2,
+                            GamePublisherId = 5
+                        },
+                        new Game()
+                        {
+                            //Name of the game
+                            Name = "Hearts of Iron IV ",
+                            //Description of the game
+                            Description = "Hearts of Iron IV is a grand strategy computer wargame developed by Paradox Development Studio and published by Paradox Interactive. It was released worldwide on 6 June 2016. It is the sequel to 2009’s Hearts of Iron III and the fourth main installment in the Hearts of Iron series. Like previous games in the series, Hearts of Iron IV is a grand strategy wargame that focuses on World War II. The player may take control of any nation in the world in either 1936 or 1939 and lead them to victory or defeat against other countries.",
+                            //Release date of the game
+                            ReleaseDate = new DateTime(2016, 06, 06),
+                            //Price of the game
+                            Price = 34.99,
+                            //Genre of the game
+                            GameGenre = GameGenre.GrandStrategy,
+						    //URL path
+                            ImageURL = "/Images/GameImage/Hearts_of_Iron_IV.jpg",
+                            GameRatingId = 2,
+                            GameDeveloperId = 2,
+                            GamePublisherId = 5
                         },
                     });
                     //Saves all changes to the context to the database 

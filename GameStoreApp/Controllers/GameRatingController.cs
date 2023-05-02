@@ -7,6 +7,7 @@ using System.Data;
 
 namespace GameStoreApp.Controllers
 {
+
     [Authorize(Roles = UserRoles.Admin)]
     public class GameRatingController : Controller
     {
