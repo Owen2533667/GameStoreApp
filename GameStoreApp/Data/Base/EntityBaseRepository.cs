@@ -26,7 +26,7 @@ namespace GameStoreApp.Data.Base
         public async Task DeleteAsync(int id)
         {
             var entity = await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id); 
-            EntityEntry entityEntry = _context.Entry<T>(entity);
+            EntityEntry entityEntry = _context.Entry<T>(entity!);
             entityEntry.State = EntityState.Deleted;
 
             await _context.SaveChangesAsync();
