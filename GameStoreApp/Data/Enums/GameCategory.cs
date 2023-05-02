@@ -27,7 +27,11 @@ namespace GameStoreApp.Data.Enums
         GrandStrategy,
         [Display(Name = "Social Simulation")]
         SocialSimulation,
-        Action
+        Action,
+        Racing,
+        Simulation,
+        Puzzle,
+        Fighting
 
     }
 }
