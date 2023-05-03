@@ -79,7 +79,7 @@
                             </div>
                         </div>
                         <div class="col-md-6 justify-content-center">
-                            <img src="@game.ImageURL" style="width: 100%; height: 280px" alt="@game.Name">
+                            <img src="@game.ImageURL" style="width: 100%; height: 280px; border: 2px solid #555;" alt="@game.Name">
                         </div>
                         <div class="col-md-6">
                             <div class="card-body">
@@ -97,6 +97,11 @@
                                     {
                                         <a class="badge bg-danger text-white" asp-controller="GameRating" asp-action="Details" asp-route-id="@game.GameRatingId" asp-route-returnId="@game.Id"><b>@game.GameRating.Name</b></a>
                                     }
+                                </p>
+                                <p class="card-text">
+                                    @*Gets the display name for the enum genre.*@
+                                    <b>Genre: </b>
+                                    @Html.DisplayTextFor(x => @game.GameGenre)
                                 </p>
                                 <p class="card-text"><b>Release Date: </b> @game.ReleaseDate.ToString("dd MMM yyyy")</p>
                                 <p class="card-text">

@@ -160,11 +160,15 @@ namespace GameStoreApp.Controllers
             return RedirectToAction("Index");
         }
 
+        //AllowsAnonymous meaning that unautherised users can use this action
+        //An asynchronous method that accept a single parameter that will used to filter the games by.
         [AllowAnonymous]
         public async Task<IActionResult> Filter(string searchString)
         {
-            var data = await _service.GetAllAsync(p => p.GamePublisher, d => d.GameDeveloper);
+            //Gets all games, and include properties game publisher, game developer and game rating
+            var data = await _service.GetAllAsync(p => p.GamePublisher, d => d.GameDeveloper, r => r.GameRating);
 
+            //if search string is not null or empty
             if(!string.IsNullOrEmpty(searchString))
             {
                 var filteredData = data.Where(x => x.Name!.Contains(searchString, StringComparison.OrdinalIgnoreCase) || x.Description!.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();

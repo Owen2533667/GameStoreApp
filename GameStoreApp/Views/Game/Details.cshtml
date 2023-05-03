@@ -48,8 +48,9 @@
                             }
                         </p>
                         <p class="card-text">
+                            @*Gets the display name for the enum genre.*@
                             <b>Genre: </b>
-                            @Model.GameGenre
+                            @Html.DisplayTextFor(x => @Model.GameGenre)
                         </p>
                         <p class="card-text"><b>Release Date: </b> @Model.ReleaseDate.ToString("dd MMM yyyy")</p>
                         <p class="card-text">
