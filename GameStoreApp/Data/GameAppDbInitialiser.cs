@@ -16,7 +16,7 @@ namespace GameStoreApp.Data
                 var context = serviceScope.ServiceProvider.GetService<GameStoreAppDbContext>();
 
                 //checks to see if the database is created
-                context.Database.EnsureCreated();
+                context!.Database.EnsureCreated();
 
                 //VoiceActors
                 //checks if context VoiceActors has any elements

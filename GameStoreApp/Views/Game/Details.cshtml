@@ -113,7 +113,7 @@
                         @if (TempData["returnController"]!.ToString() == "Game")
                         {
                             @*this is the button that will the user to the index for game.*@
-                            <a class="btn btn-outline-primary" asp-action="Index"><i class="bi bi-caret-left-fill"></i> Back</a>
+                            <a class="btn btn-outline-primary" asp-action="Index" asp-route-pg="@TempData["pg"]"><i class="bi bi-caret-left-fill"></i> Back</a>
                         }
                         else if (TempData["returnController"]!.ToString() == "GameDeveloper")
                         {

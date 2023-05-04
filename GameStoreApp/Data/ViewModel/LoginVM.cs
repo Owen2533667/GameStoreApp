@@ -7,9 +7,9 @@ namespace GameStoreApp.Data.ViewModel
         [Required(ErrorMessage = "Email is required")]
         [Display(Name = "Email")]
         [DataType(DataType.EmailAddress)]
-        public string EmailAddress { get; set; }
+        public string? EmailAddress { get; set; }
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string? Password { get; set; }
     }
 }

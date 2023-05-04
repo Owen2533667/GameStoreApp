@@ -42,13 +42,13 @@ namespace GameStoreApp.Controllers
                 return View(loginVM);
             }
 
-            var user = await _userManager.FindByEmailAsync(loginVM.EmailAddress);
+            var user = await _userManager.FindByEmailAsync(loginVM.EmailAddress!);
             if (user != null) 
             {
-                var checkPassword = await _userManager.CheckPasswordAsync(user, loginVM.Password);
+                var checkPassword = await _userManager.CheckPasswordAsync(user, loginVM.Password!);
                 if (checkPassword)
                 {
-                    var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, false, false);
+                    var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password!, false, false);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("Index", "Game");
@@ -77,7 +77,7 @@ namespace GameStoreApp.Controllers
                 return View(registerVM);
             }
 
-            var user = await _userManager.FindByEmailAsync(registerVM.EmailAddress);
+            var user = await _userManager.FindByEmailAsync(registerVM.EmailAddress!);
             if(user != null)
             {
                 TempData["Error"] = registerVM.EmailAddress + " is already registered";
@@ -86,13 +86,13 @@ namespace GameStoreApp.Controllers
 
             var newUser = new GameStoreUser()
             {
-                firstName = registerVM.FirstName,
-                lastName = registerVM.FamilyName,
+                firstName = registerVM.FirstName!,
+                lastName = registerVM.FamilyName!,
                 Email = registerVM.EmailAddress,
                 UserName = registerVM.EmailAddress
             };
 
-            var newUserResponse = await _userManager.CreateAsync(newUser, registerVM.Password);
+            var newUserResponse = await _userManager.CreateAsync(newUser, registerVM.Password!);
 
             if (newUserResponse.Succeeded) 
             {

@@ -33,26 +33,31 @@ namespace GameStoreApp.Data.Services
             await _context.Games.AddAsync(newGame);
             await _context.SaveChangesAsync();
 
-            foreach (var VoiceActorId in data.VoiceActorIds)
+            if (data.VoiceActorIds?.Count() > 0 )
             {
-                var newVoiceActorGame = new VoiceActor_Game()
+                foreach (var VoiceActorId in data.VoiceActorIds)
                 {
-                    GameId = newGame.Id,
-                    VoiceActorId = VoiceActorId,
-                };
-                await _context.VoiceActors_Games.AddAsync(newVoiceActorGame);
+                    var newVoiceActorGame = new VoiceActor_Game()
+                    {
+                        GameId = newGame.Id,
+                        VoiceActorId = VoiceActorId,
+                    };
+                    await _context.VoiceActors_Games.AddAsync(newVoiceActorGame);
+                }
             }
-
-            foreach (var PlatformId in data.PlatformIds)
+            
+            if (data.PlatformIds?.Count() > 0)
             {
-                var newPlatformGame = new Platform_Game()
+                foreach (var PlatformId in data.PlatformIds)
                 {
-                    GameId = newGame.Id,
-                    PlatformId = PlatformId,
-                };
-                await _context.Platforms_Games.AddAsync(newPlatformGame);
+                    var newPlatformGame = new Platform_Game()
+                    {
+                        GameId = newGame.Id,
+                        PlatformId = PlatformId,
+                    };
+                    await _context.Platforms_Games.AddAsync(newPlatformGame);
+                }
             }
-
             await _context.SaveChangesAsync();
         }
 
@@ -66,7 +71,7 @@ namespace GameStoreApp.Data.Services
                 .Include(pg => pg.Platforms_Games).ThenInclude(p => p.Platform)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return data;
+            return data!;
         }
 
         public async Task<NewGameDropdownVM> GetNewGameDropDownValues()
@@ -111,27 +116,34 @@ namespace GameStoreApp.Data.Services
             await _context.SaveChangesAsync();
 
 
-            //
-            foreach (var VoiceActorId in data.VoiceActorIds)
+            if (data.VoiceActorIds?.Count() > 0)
             {
-                var newVoiceActorGame = new VoiceActor_Game()
+                foreach (var VoiceActorId in data.VoiceActorIds)
                 {
-                    GameId = data.Id,
-                    VoiceActorId = VoiceActorId,
-                };
-                await _context.VoiceActors_Games.AddAsync(newVoiceActorGame);
+                    var newVoiceActorGame = new VoiceActor_Game()
+                    {
+                         GameId = data.Id,
+                         VoiceActorId = VoiceActorId,
+                    };
+                    await _context.VoiceActors_Games.AddAsync(newVoiceActorGame);
+                }
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
-
-            foreach (var PlatformIds in data.PlatformIds)
+            
+            if (data.PlatformIds?.Count() > 0)
             {
-                var newPlatformGame = new Platform_Game()
+                foreach (var PlatformIds in data.PlatformIds)
                 {
-                    GameId = data.Id,
-                    PlatformId = PlatformIds,
-                };
-                await _context.Platforms_Games.AddAsync(newPlatformGame);
+                    var newPlatformGame = new Platform_Game()
+                    {
+                        GameId = data.Id,
+                        PlatformId = PlatformIds,
+                    };
+                    await _context.Platforms_Games.AddAsync(newPlatformGame);
+                }
+                await _context.SaveChangesAsync();
             }
+            
             await _context.SaveChangesAsync();
         }
 

@@ -36,11 +36,11 @@ namespace GameStoreApp.Models
         //Relationships
         [Display(Name = "Select Voice Actor(s)")]
         //[Required(ErrorMessage = "Voice Actor(s) is rquired")]
-        public List<int> VoiceActorIds { get; set; }
+        public List<int>? VoiceActorIds { get; set; }
 
         [Display(Name = "Select Platform(s)")]
         //[Required(ErrorMessage = "Platform(s) is rquired")]
-        public List<int> PlatformIds { get; set; }
+        public List<int>? PlatformIds { get; set; }
 
         [Display(Name = "Select Developer")]
         [Required(ErrorMessage = "The Developer is rquired")]
