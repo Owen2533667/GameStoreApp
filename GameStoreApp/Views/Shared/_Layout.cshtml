@@ -27,7 +27,7 @@
                         </li>
 
                         @*checks to see if the user is authenticated and if the user role is admin. If this is the case, then the navigation bar will include amin dropdown button that allows them to go to the publisher, developer and voice actor.*@
-                        @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                        @if (User.Identity!.IsAuthenticated && User.IsInRole("admin"))
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -46,7 +46,7 @@
                     </ul>
 
                     <form class="form-inline my-2 my-lg-0 searchbar-nav" asp-controller="Game" asp-action="Filter" style="padding-right: 20px;">
-                        <input name="searchString" type="text" class="form-control" placeholder="Search for game..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <input name="searchString" type="text" class="form-control the-search-nav" placeholder="Search for game..." aria-label="Recipient's username" aria-describedby="button-addon2">
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="bi bi-search"></i></button>
                     </form>
 
