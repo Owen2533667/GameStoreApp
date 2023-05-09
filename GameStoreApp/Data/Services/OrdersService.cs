@@ -14,7 +14,7 @@ namespace GameStoreApp.Data.Services
 
         public async Task<List<Order>> GetOrdersByUserIdAndRoleAsync(string userId, string userRole)
         {
-            var orders = await _context.Orders.Include(x => x.OrderItems).ThenInclude(x => x.Game).Include(x => x.User).ToListAsync();
+            var orders = await _context.Orders.Include(x => x.OrderItems)!.ThenInclude(x => x.Game).Include(x => x.User).ToListAsync();
 
             if(userRole != "admin")
             {
@@ -38,7 +38,7 @@ namespace GameStoreApp.Data.Services
                 var orderItem = new OrderItem()
                 {
                     Amount = item.Amount,
-                    GameId = item.Game.Id,
+                    GameId = item.Game!.Id,
                     OrderId = order.Id,
                     Price = item.Game.Price
                 };

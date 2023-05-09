@@ -7,7 +7,7 @@ namespace GameStoreApp.Models
     /// Represents a game rating.
     /// </summary>
     /// <remarks>
-    /// Implements IEntityBase.
+    /// Implements <seealso cref="IEntityBase"/>.
     /// </remarks>
     public class GameRating : IEntityBase
     {
