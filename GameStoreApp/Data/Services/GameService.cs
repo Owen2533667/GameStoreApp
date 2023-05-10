@@ -4,148 +4,177 @@ using GameStoreApp.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStoreApp.Data.Services
-{
+
+    /// <summary>
+    /// Represents a service for managing games.
+    /// Implements the <see cref="EntityBaseRepository{T}"/> class and the <see cref="IGameService"/> interface.
+    /// </summary>
     public class GameService : EntityBaseRepository<Game>, IGameService
+{
+    private readonly GameStoreAppDbContext _context;
+
+    /// <summary>
+    /// Initialises a new instance of the <see cref="GameService"/> class.
+    /// </summary>
+    /// <param name="context">The <see cref="GameStoreAppDbContext"/> database context.</param>
+    public GameService(GameStoreAppDbContext context) : base(context)
     {
-        private readonly GameStoreAppDbContext _context;
+        _context = context;
+    }
 
-        public GameService(GameStoreAppDbContext context) : base(context)
+    /// <summary>
+    /// Adds a new game asynchronously.
+    /// </summary>
+    /// <param name="data">The data of the new game.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task AddNewGameAsync(NewGameVM data)
+    {
+        // Create a new Game instance with the provided data
+        var newGame = new Game()
         {
-            _context = context;
+            Name = data.Name,
+            Description = data.Description,
+            Price = data.Price,
+            ImageURL = data.ImageURL,
+            GameRatingId = data.GameRatingId,
+            GamePublisherId = data.GamePublisherId,
+            GameDeveloperId = data.GameDeveloperId,
+            ReleaseDate = data.ReleaseDate,
+            GameGenre = data.GameGenre,
+        };
+
+        // Add the new game to the context
+        await _context.Games.AddAsync(newGame);
+        await _context.SaveChangesAsync();
+
+        // If there are voice actors for this game, add them to the VoiceActors_Games table
+        if (data.VoiceActorIds?.Count() > 0) // Checks VoiceActorIds count is greater than zero.
+        {
+            // For each of the elements in the VoiceActorId list
+            foreach (var VoiceActorId in data.VoiceActorIds)
+            {
+                // Create a new Voiceactor_Game instance with the element data.
+                var newVoiceActorGame = new VoiceActor_Game()
+                {
+                    GameId = newGame.Id, // Set the GameId property of the new VoiceActor_Game instance to the Id of the newly created game
+                    VoiceActorId = VoiceActorId, // Set the VoiceActorId property of the new VoiceActor_Game instance to the current voice actor id in the loop
+                };
+                await _context.VoiceActors_Games.AddAsync(newVoiceActorGame); // Add the new VoiceActor_Game instance to the context
+            }
         }
 
-        //AddNewGameAsync is an asynchronos method that returns a task and accepts a newGameVM as a parameter. The purpose of this method is to add a new game into the related game table and other relationship data between game and voice actor/platform.
-        public async Task AddNewGameAsync(NewGameVM data)
+        // If there are platforms for this game, add them to the Platforms_Games table
+        if (data.PlatformIds?.Count() > 0)
         {
-            var newGame = new Game()
+            // For each of the elements in the PlatformIds list
+            foreach (var PlatformId in data.PlatformIds)
             {
-                Name = data.Name,
-                Description = data.Description,
-                Price = data.Price,
-                ImageURL = data.ImageURL,
-                GameRatingId = data.GameRatingId,
-                GamePublisherId = data.GamePublisherId,
-                GameDeveloperId = data.GameDeveloperId,
-                ReleaseDate = data.ReleaseDate,
-                GameGenre = data.GameGenre,
-            };
-
-            await _context.Games.AddAsync(newGame);
-            await _context.SaveChangesAsync();
-
-            if (data.VoiceActorIds?.Count() > 0 )
-            {
-                foreach (var VoiceActorId in data.VoiceActorIds)
+                // Create a new Voiceactor_Game instance with the element data.
+                var newPlatformGame = new Platform_Game()
                 {
-                    var newVoiceActorGame = new VoiceActor_Game()
-                    {
-                        GameId = newGame.Id,
-                        VoiceActorId = VoiceActorId,
-                    };
-                    await _context.VoiceActors_Games.AddAsync(newVoiceActorGame);
-                }
+                    GameId = newGame.Id, // Set the GameId property of the new Platform_Game instance to the Id of the newly created game
+                    PlatformId = PlatformId, // Set the PlatformId property of the new Platform_Game instance to the current platform id in the loop
+                };
+                await _context.Platforms_Games.AddAsync(newPlatformGame); // Add the new Platform_Game instance to the context
             }
-            
-            if (data.PlatformIds?.Count() > 0)
-            {
-                foreach (var PlatformId in data.PlatformIds)
-                {
-                    var newPlatformGame = new Platform_Game()
-                    {
-                        GameId = newGame.Id,
-                        PlatformId = PlatformId,
-                    };
-                    await _context.Platforms_Games.AddAsync(newPlatformGame);
-                }
-            }
-            await _context.SaveChangesAsync();
         }
 
-        public async Task<Game> GetGameByIdAsync(int id)
-        {
-            var data = await _context.Games
+        // Save all changes made to the context
+        await _context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Retrieves a game by its ID asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the game to retrieve.</param>
+    /// <returns>A task representing the asynchronous operation. The retrieved game.</returns>
+    public async Task<Game> GetGameByIdAsync(int id)
+    {
+        // Retrieve the game from the context including related entities
+        var data = await _context.Games
                 .Include(p => p.GamePublisher)
                 .Include(d => d.GameDeveloper)
                 .Include(r => r.GameRating)
-                .Include(vag => vag.VoiceActors_Games).ThenInclude(va => va.VoiceActor)
-                .Include(pg => pg.Platforms_Games).ThenInclude(p => p.Platform)
+                .Include(vag => vag.VoiceActors_Games)!.ThenInclude(va => va.VoiceActor)
+                .Include(pg => pg.Platforms_Games)!.ThenInclude(p => p.Platform)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return data!;
-        }
+        // Return the game with the included properties
+        return data!;
+    }
 
-        public async Task<NewGameDropdownVM> GetNewGameDropDownValues()
-        {
-            var response = new NewGameDropdownVM();
-            response.VoiceActor = await _context.VoiceActors.OrderBy(x => x.FullName).ToListAsync();
-            response.Publisher = await _context.GamePublishers.OrderBy(x => x.Name).ToListAsync();
-            response.Developer = await _context.GameDevelopers.OrderBy(x => x.Name).ToListAsync();
-            response.Platform = await _context.Platforms.OrderBy(x => x.Name).ToListAsync();
-            response.Rating = await _context.GameRatings.OrderBy(x => x.Name).ToListAsync();
+    public async Task<NewGameDropdownVM> GetNewGameDropDownValues()
+    {
+        var response = new NewGameDropdownVM();
+        response.VoiceActor = await _context.VoiceActors.OrderBy(x => x.FullName).ToListAsync();
+        response.Publisher = await _context.GamePublishers.OrderBy(x => x.Name).ToListAsync();
+        response.Developer = await _context.GameDevelopers.OrderBy(x => x.Name).ToListAsync();
+        response.Platform = await _context.Platforms.OrderBy(x => x.Name).ToListAsync();
+        response.Rating = await _context.GameRatings.OrderBy(x => x.Name).ToListAsync();
 
-            return response;
-
-        }
-
-        public async Task UpdateGameAsync(NewGameVM data)
-        {
-            var dbGame = await _context.Games.FirstOrDefaultAsync(x => x.Id == data.Id);
-
-            if (dbGame != null)
-            {
-                dbGame.Name = data.Name;
-                dbGame.Description = data.Description;
-                dbGame.Price = data.Price;
-                dbGame.ImageURL = data.ImageURL;
-                dbGame.GamePublisherId = data.GamePublisherId;
-                dbGame.GameDeveloperId = data.GameDeveloperId;
-                dbGame.GameRatingId = data.GameRatingId;
-                dbGame.ReleaseDate = data.ReleaseDate;
-                dbGame.GameGenre = data.GameGenre;
-                await _context.SaveChangesAsync();
-            }
-
-            //Remove existing voice actors
-            var existingVoiceActorDb = _context.VoiceActors_Games.Where(x => x.GameId == data.Id).ToList();
-            _context.VoiceActors_Games.RemoveRange(existingVoiceActorDb);
-            await _context.SaveChangesAsync();
-
-            //Remove existing platforms
-            var existingPlatformsDb = _context.Platforms_Games.Where(x => x.GameId == data.Id).ToList();
-            _context.Platforms_Games.RemoveRange(existingPlatformsDb);
-            await _context.SaveChangesAsync();
-
-
-            if (data.VoiceActorIds?.Count() > 0)
-            {
-                foreach (var VoiceActorId in data.VoiceActorIds)
-                {
-                    var newVoiceActorGame = new VoiceActor_Game()
-                    {
-                         GameId = data.Id,
-                         VoiceActorId = VoiceActorId,
-                    };
-                    await _context.VoiceActors_Games.AddAsync(newVoiceActorGame);
-                }
-                await _context.SaveChangesAsync();
-            }
-            
-            if (data.PlatformIds?.Count() > 0)
-            {
-                foreach (var PlatformIds in data.PlatformIds)
-                {
-                    var newPlatformGame = new Platform_Game()
-                    {
-                        GameId = data.Id,
-                        PlatformId = PlatformIds,
-                    };
-                    await _context.Platforms_Games.AddAsync(newPlatformGame);
-                }
-                await _context.SaveChangesAsync();
-            }
-            
-            await _context.SaveChangesAsync();
-        }
+        return response;
 
     }
+
+    public async Task UpdateGameAsync(NewGameVM data)
+    {
+        var dbGame = await _context.Games.FirstOrDefaultAsync(x => x.Id == data.Id);
+
+        if (dbGame != null)
+        {
+            dbGame.Name = data.Name;
+            dbGame.Description = data.Description;
+            dbGame.Price = data.Price;
+            dbGame.ImageURL = data.ImageURL;
+            dbGame.GamePublisherId = data.GamePublisherId;
+            dbGame.GameDeveloperId = data.GameDeveloperId;
+            dbGame.GameRatingId = data.GameRatingId;
+            dbGame.ReleaseDate = data.ReleaseDate;
+            dbGame.GameGenre = data.GameGenre;
+            await _context.SaveChangesAsync();
+        }
+
+
+        var existingVoiceActorDb = _context.VoiceActors_Games.Where(x => x.GameId == data.Id).ToList();
+        _context.VoiceActors_Games.RemoveRange(existingVoiceActorDb);
+        await _context.SaveChangesAsync();
+
+
+        var existingPlatformsDb = _context.Platforms_Games.Where(x => x.GameId == data.Id).ToList();
+        _context.Platforms_Games.RemoveRange(existingPlatformsDb);
+        await _context.SaveChangesAsync();
+
+
+        if (data.VoiceActorIds?.Count() > 0)
+        {
+            foreach (var VoiceActorId in data.VoiceActorIds)
+            {
+                var newVoiceActorGame = new VoiceActor_Game()
+                {
+                    GameId = data.Id,
+                    VoiceActorId = VoiceActorId,
+                };
+                await _context.VoiceActors_Games.AddAsync(newVoiceActorGame);
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        if (data.PlatformIds?.Count() > 0)
+        {
+            foreach (var PlatformIds in data.PlatformIds)
+            {
+                var newPlatformGame = new Platform_Game()
+                {
+                    GameId = data.Id,
+                    PlatformId = PlatformIds,
+                };
+                await _context.Platforms_Games.AddAsync(newPlatformGame);
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
+}
 }
