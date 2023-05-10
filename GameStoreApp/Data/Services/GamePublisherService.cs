@@ -34,7 +34,7 @@ namespace GameStoreApp.Data.Services
                 .Include(g => g.Games)!.ThenInclude(r => r.GameRating) // Include related Games and their GameRating
                 .FirstOrDefaultAsync(x => x.Id == id); // Find the first game publisher with the specified ID
 
-            return data;
+            return data!;
         }
     }
 }

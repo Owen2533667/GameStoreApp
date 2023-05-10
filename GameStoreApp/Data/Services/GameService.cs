@@ -103,25 +103,43 @@ namespace GameStoreApp.Data.Services
         return data!;
     }
 
+    /// <summary>
+    /// Retrieves dropdown values for creating a new game asynchronously.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation. The dropdown values for a new game.</returns>
     public async Task<NewGameDropdownVM> GetNewGameDropDownValues()
     {
+        // Create a new instance of the NewGameDropdownVM class to store the dropdown values
         var response = new NewGameDropdownVM();
+
+        // Retrieve voice actors from the context and order them by FullName
         response.VoiceActor = await _context.VoiceActors.OrderBy(x => x.FullName).ToListAsync();
+        // Retrieve publishers from the context and order them by Name
         response.Publisher = await _context.GamePublishers.OrderBy(x => x.Name).ToListAsync();
+        // Retrieve developers from the context and order them by Name
         response.Developer = await _context.GameDevelopers.OrderBy(x => x.Name).ToListAsync();
+        // Retrieve platforms from the context and order them by Name
         response.Platform = await _context.Platforms.OrderBy(x => x.Name).ToListAsync();
+        // Retrieve ratings from the context and order them by Name
         response.Rating = await _context.GameRatings.OrderBy(x => x.Name).ToListAsync();
 
-        return response;
-
+        return response; // Return the response
     }
 
+    /// <summary>
+    /// Updates a game asynchronously with the provided data.
+    /// </summary>
+    /// <param name="data">The data to update the game.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task UpdateGameAsync(NewGameVM data)
     {
+        // Retrieve the game from the context based on the provided ID
         var dbGame = await _context.Games.FirstOrDefaultAsync(x => x.Id == data.Id);
 
+        // If the dbGame result is not null, meaning it matched a game from the db
         if (dbGame != null)
         {
+            // Update the game properties with the provided data
             dbGame.Name = data.Name;
             dbGame.Description = data.Description;
             dbGame.Price = data.Price;
@@ -131,20 +149,22 @@ namespace GameStoreApp.Data.Services
             dbGame.GameRatingId = data.GameRatingId;
             dbGame.ReleaseDate = data.ReleaseDate;
             dbGame.GameGenre = data.GameGenre;
+
+            // Save the changes to the context
             await _context.SaveChangesAsync();
         }
 
-
+        // Remove existing voice actors associated with the game
         var existingVoiceActorDb = _context.VoiceActors_Games.Where(x => x.GameId == data.Id).ToList();
         _context.VoiceActors_Games.RemoveRange(existingVoiceActorDb);
         await _context.SaveChangesAsync();
 
-
+        // Remove existing platforms associated with the game
         var existingPlatformsDb = _context.Platforms_Games.Where(x => x.GameId == data.Id).ToList();
         _context.Platforms_Games.RemoveRange(existingPlatformsDb);
         await _context.SaveChangesAsync();
 
-
+        // Associate the game with the specified voice actors
         if (data.VoiceActorIds?.Count() > 0)
         {
             foreach (var VoiceActorId in data.VoiceActorIds)
@@ -156,9 +176,12 @@ namespace GameStoreApp.Data.Services
                 };
                 await _context.VoiceActors_Games.AddAsync(newVoiceActorGame);
             }
+
+            // Save the changes to the context
             await _context.SaveChangesAsync();
         }
 
+        // Associate the game with the specified platforms
         if (data.PlatformIds?.Count() > 0)
         {
             foreach (var PlatformIds in data.PlatformIds)
@@ -173,6 +196,7 @@ namespace GameStoreApp.Data.Services
             await _context.SaveChangesAsync();
         }
 
+        // Save the changes to the context
         await _context.SaveChangesAsync();
     }
 

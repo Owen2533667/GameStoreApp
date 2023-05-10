@@ -30,7 +30,7 @@ namespace GameStoreApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(int pg=1)
         {
-            var games = await _service.GetAllAsync(p => p.GamePublisher, d => d.GameDeveloper, r => r.GameRating); //uses the getAllAsync method from the IGameService and passes three parameters that will be included in the result
+            var games = await _service.GetAllAsync(p => p.GamePublisher!, d => d.GameDeveloper!, r => r.GameRating!); //uses the getAllAsync method from the IGameService and passes three parameters that will be included in the result
 
             const int pageSize = 9; //set the page size to 9. There will now only be 9 games displayed per page. This can be changed by updating this vaule.
 

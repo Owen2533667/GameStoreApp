@@ -84,7 +84,7 @@ namespace GameStoreApp.Data.Cart
         public void RemoveItemFromCart(Game game)
         {
             // Find the shopping cart item that corresponds to the specified game.
-            var shoppingCartItem = _context.ShoppingCartItems.FirstOrDefault(x => x.Game.Id == game.Id && x.ShoppingCartId == ShoppingCartId);
+            var shoppingCartItem = _context.ShoppingCartItems.FirstOrDefault(x => x.Game!.Id == game.Id && x.ShoppingCartId == ShoppingCartId);
 
             // If the shopping cart item exists, and if the amount is greate than one, decrement its amount by 1. If the amount is 0, remove the item from the shopping cart.
             if (shoppingCartItem != null)
