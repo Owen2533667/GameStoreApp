@@ -15,11 +15,14 @@ namespace GameStoreApp.Controllers
     {
         
         private readonly IGameService _service; //The service interface that will be used to interact with the database as a datalayer.
+        private readonly ILogger<GameController> _logger;
 
         //constructor:
-        public GameController(IGameService service)
+        public GameController(IGameService service, ILogger<GameController> logger)
         {
             _service = service;
+            _logger = logger;
+
         }
 
         /// <summary>
@@ -68,11 +71,17 @@ namespace GameStoreApp.Controllers
         {
             var data = await _service.GetGameByIdAsync(id); //Gets the game that has the id passed to action.
 
-            if (data == null) return View("NotFound"); //If the id passed returns null, send the user to "NotFound" View.
+            if (data == null)
+            {
+                _logger.LogWarning($" user tried view details of Game with ID {id} that was not found");
+                //If the id passed returns null, send the user to "NotFound" View.
+                return View("NotFound"); 
+            }
 
             TempData["returnController"] = returnController; //Send TempData of the controller.
             TempData["pg"] = pg; //Send the TempData of the pg number
 
+            _logger.LogInformation(HttpContext.User.Identity?.Name ?? "Guest" + $" user viewed details of Game with ID {id} that was not found");
             return View(data); //Send the user to details view with data.
         }
 
