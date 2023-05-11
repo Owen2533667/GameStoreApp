@@ -2,6 +2,9 @@
 
 namespace GameStoreApp.Data.Enums
 {
+    /// <summary>
+    /// A enum of the different game genres. If there is a genre that require more than one word, use Display tag.
+    /// </summary>
     public enum GameGenre
     {
         Sandbox = 1,

@@ -1,6 +1,7 @@
 using GameStoreApp.Data;
 using GameStoreApp.Data.Cart;
 using GameStoreApp.Data.Services;
+using GameStoreApp.Filters;
 using GameStoreApp.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
@@ -35,6 +36,12 @@ builder.Services.AddSession();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+});
+
+//Add the log filter
+builder.Services.AddMvc(options =>
+{
+    options.Filters.Add(typeof(LogRequestFilter));
 });
 
 var app = builder.Build();
