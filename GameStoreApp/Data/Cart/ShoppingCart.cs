@@ -112,10 +112,27 @@ namespace GameStoreApp.Data.Cart
         }
 
         /// <summary>
+        /// Checks if the shopping cart contains a specific game.
+        /// </summary>
+        /// <param name="game">The game to check for in the shopping cart.</param>
+        /// <returns>True if the game is found in the shopping cart, otherwise false.</returns>
+        /// <remarks>
+        /// This method verifies if a particular game is present in the shopping cart. It performs a check by comparing the provided game with the game items in the cart.
+        /// </remarks>
+        public Boolean CartContains(Game game)
+        {
+            // Retrieve the current shopping cart items if available, otherwise fetch them from the database
+            var currentCart = ShoppingCartItems ?? (ShoppingCartItems = _context.ShoppingCartItems.Where(x => x.ShoppingCartId == ShoppingCartId).Include(x => x.Game).ToList());
+
+            // Check if any cart item in the current cart matches the provided game
+            return currentCart.Any(cartItem => cartItem.Game!.Id == game.Id);
+        }
+
+        /// <summary>
         /// Calculates the total cost of all items in the shopping cart.
         /// </summary>
         /// <returns> The total cost of all items in the shopping cart as a double</returns>
-        public double GetCartTotal() => _context.ShoppingCartItems.Where(x => x.ShoppingCartId == ShoppingCartId).Select(x => x.Game.Price * x.Amount).Sum();
+        public double GetCartTotal() => _context.ShoppingCartItems.Where(x => x.ShoppingCartId == ShoppingCartId).Select(x => x.Game!.Price * x.Amount).Sum();
 
         /// <summary>
         /// An async method that clears the shopping cart items where they have the shopping cart id. This retreives the shopping cart id that has the matching shopping cart id and saves that List called items, and then removes a range, using the list of items,  of data from the db table ShoppingCartItems. This means that all shopping cart items with the shopping cart id will be removed from the db. It then set the ShoppingCartItems property to a new List of ShoppingCartItems

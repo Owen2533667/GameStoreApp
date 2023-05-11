@@ -26,129 +26,196 @@ namespace GameStoreApp.Controllers
         }
 
         /// <summary>
-        /// The index action method will return the user to the index view with the collection of games from the database. Moreover, this view will act as an home page for the games e-commerece platform. This is an async method, that returns a task of IActionResult which will be the view Index for the game controller. It will send the game collection to the view as well. This method will allow anonymous users, meaning the user does not have to be authorised or logged in.
+        /// Retrieves and displays a paginated list of games.
         /// </summary>
-        /// <param name="pg">The page number of the current page. The default, if not provided, is one.</param>
-        /// <returns>Index view for the game controller, with the pagered collection of games. This should be nine games.</returns>
+        /// <param name="pg">The page number.</param>
+        /// <returns>An asynchronous task that represents the operation. Returns the index view with the paginated list of games.</returns>
+        /// <remarks>
+        /// This action is accessible to all users (anonymous and authenticated) due to the <seealso cref="AllowAnonymousAttribute"/> data annotation.
+        /// It retrieves all games asynchronously using the <see cref="IGameService.GetAllAsync"/> method, including related entities like game publisher, game developer, and game rating. The list of games is paginated, with a default page size of 9. If the specified page number is less than 1, it is adjusted to 1. The total number of games is determined, and a pager object is created to handle pagination. The appropriate range of games is retrieved based on the current page number and page size. The pager object is assigned to the ViewBag to be accessed in the view. Finally, the view with the paginated list of games is returned.
+        /// </remarks>
         [AllowAnonymous]
         public async Task<IActionResult> Index(int pg=1)
         {
-            var games = await _service.GetAllAsync(p => p.GamePublisher!, d => d.GameDeveloper!, r => r.GameRating!); //uses the getAllAsync method from the IGameService and passes three parameters that will be included in the result
+            // Retrieve all games asynchronously with related entities using the GetAllAsync method
+            var games = await _service.GetAllAsync(p => p.GamePublisher!, d => d.GameDeveloper!, r => r.GameRating!); 
 
-            const int pageSize = 9; //set the page size to 9. There will now only be 9 games displayed per page. This can be changed by updating this vaule.
+            const int pageSize = 9; // Set page size to 9
 
-            //Checks to see if the parameter given to index is less than one.
-            if (pg < 1) // if pg is less then 1, set pg back to one. 
+            // Adjust the page number if it is less than 1
+            if (pg < 1) 
                 pg = 1;
 
-            //gets the totalItems for the pager count by getting the count of all elements in games.
-            int totalItems = games.Count();
+            int totalItems = games.Count(); // Get the total amount of games
 
-            //creates a new Pager object with the parameters totalItems, page, and pageSize (this will be 10)
+            // Create a pager object to handle pagination, passing the total items, page number and size of page.
             var pager = new Pager(totalItems, pg, pageSize);
+            
+            int recSkip = (pg - 1) * pageSize; // Calculates what index of the next 9 elements to get.
 
-            //the current page number - 1 times pagesize
-            int recSkip = (pg - 1) * pageSize;
+            // Retrieve the appropriate range of games based on the recSkip index calculated and take the next game elements using the page size value.
+            var pagerData = games.Skip(recSkip).Take(pager.PageSize).ToList();
 
-            //pagerData will be the next element that will be displayed. 
-            var pagerData = games.Skip(recSkip).Take(pager.PageSize).ToList();//game.skip will return the elements that remain after bypassing elements that was specified. After that, The take will take the next specified elements (9) and then return this a list.
-
-            //send the pager information to the view using the view bag.
+            // Assign the pager object to the ViewBag to be accessed in the view
             this.ViewBag.Pager = pager;
 
-            //return View(Games);
-            //return to the view of index with the pagerData.
+            // Return the view with the paginated list of games
             return View(pagerData);
         }
 
-        //Allows unautherized user to access this, even if the user is not logged in.
+        /// <summary>
+        /// Retrieves and displays the details of a game.
+        /// </summary>
+        /// <param name="id">The ID of the game.</param>
+        /// <param name="returnController">The name of the return controller.</param>
+        /// <param name="pg">The page number.</param>
+        /// <returns>An asynchronous task that represents the operation. If the game is found, it returns the view with the game details; otherwise, returns the "NotFound" view.</returns>
+        /// <remarks>
+        /// This action is accessible to all users (anonymous and authenticated) due to the <seealso cref="AllowAnonymousAttribute"/> data annotation. It retrieves the game asynchronously using the <see cref="IGameService.GetGameByIdAsync"/> method. If the game is not found, it logs a warning with information about the user, game ID, and IP address. If the game is found, it sets the return controller and page number in the TempData dictionary. It then logs an information message with details about the user, game ID, and IP address. Finally, it returns the view with the game details.
+        /// </remarks>
         [AllowAnonymous]
-        //GET: Game/Detail/{id}?{returnController}?{returnId}
-        //This async action method called details accepts three parameters. The first being the int called id, which will be the id number of the game you are trying to view details for.
-        //the second parameter is optional string called returnController that has defualt of "Game", This will be used when clicking on a game from the developer/publisher and using the back button to return to that detial view of publisher or developer of game.
-        //the last parameter is an int called pg, this will be used when the user clicks view details of a game using the index view, It sends the current page number so when the user clicks back it will send them to index at that page number.
         public async Task<IActionResult> Details(int id, string returnController = "Game", int pg=1)
         {
-            var data = await _service.GetGameByIdAsync(id); //Gets the game that has the id passed to action.
+            // Retrieve the game asynchronously using the GetGameByIdAsync method
+            var data = await _service.GetGameByIdAsync(id); 
 
             if (data == null)
             {
-                _logger.LogWarning($" user tried view details of Game with ID {id} that was not found");
-                //If the id passed returns null, send the user to "NotFound" View.
+                // Log a warning if the game is not found, including user, game ID, and IP address information
+                _logger.LogWarning($"{User.Identity!.Name ?? "Guest"} tried to view details of Game with {id} at {DateTime.Now} with IP {HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Not Detected"} but failed. [Reason: Game id not found]");
+
+                // Return the "NotFound" view if the game is not found
                 return View("NotFound"); 
             }
 
-            TempData["returnController"] = returnController; //Send TempData of the controller.
-            TempData["pg"] = pg; //Send the TempData of the pg number
+            // Set the return controller and page number in the TempData dictionary
+            TempData["returnController"] = returnController; 
+            TempData["pg"] = pg;
 
-            _logger.LogInformation(HttpContext.User.Identity?.Name ?? "Guest" + $" user viewed details of Game with ID {id} that was not found");
-            return View(data); //Send the user to details view with data.
+            // Log an information message with details about the user, game ID, and IP address
+            _logger.LogInformation($"{User.Identity!.Name ?? "Guest"} viewed details of Game: [ID = {data.Id}, Name = {data.Name}, Price = {data.Price.ToString("c")}] at {DateTime.Now} with IP {HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Not Detected"}");
+
+            // Return the view with the game detail
+            return View(data); 
         }
 
 
         //GET Game/Create
         /// <summary>
-        /// An async action method called Create, that will be used to return the create view form for admin user, that will provide the select input data for the form.
+        /// Displays the create form for a new game.
         /// </summary>
-        /// <returns>The create view</returns>
+        /// <returns>An asynchronous task that represents the operation. Returns the create view for a new game.</returns>
+        /// <remarks>
+        /// <para>
+        /// This action is asynchronous and retrieves the necessary dropdown data for select inputs using the <see cref="IGameService.GetNewGameDropDownValues"/> method.
+        /// It sets up select lists for each input field by creating instances of <see cref="SelectList"/> with the retrieved data.
+        /// The select lists are assigned to the <see cref="ViewBag"/> properties to make them available in the view.
+        /// Finally, the action returns the create view for a new game to the user.
+        /// </para>
+        /// </remarks>
         public async Task<IActionResult> Create()
         {
-            var gameDropdownData = await _service.GetNewGameDropDownValues(); //Gets the values that will be displayed in select inputs.
+            // Retrieve the dropdown data for the new game
+            var gameDropdownData = await _service.GetNewGameDropDownValues();
 
-            //Uses ViewBag to send the new instances of SelectList, which will contain the revelent data for input field. Example: publisher will have an id and name sent to select input on create form.
+            // Set up the select lists for the input fields using the retrieved dropdown data
+            // Each select list is created with the appropriate data source and value/text field mappings
             ViewBag.Publishers = new SelectList(gameDropdownData.Publisher, "Id", "Name"); 
             ViewBag.Developers = new SelectList(gameDropdownData.Developer, "Id", "Name");
             ViewBag.VoiceActors = new SelectList(gameDropdownData.VoiceActor, "Id", "FullName");
             ViewBag.Ratings = new SelectList(gameDropdownData.Rating, "Id", "Name");
             ViewBag.Platform = new SelectList(gameDropdownData.Platform, "Id", "Name");
 
-            return View(); //Return the create view for game to user.
+            // Return the create view for a new game to the user
+            return View(); 
         }
 
         /// <summary>
-        /// This Create action method, accepts one parameter of NewGameVM, will take the Create Form submit request and update the database with the form data. This will allow the creation of games by an admin user.
+        /// Handles the HTTP POST request for creating a new game.
         /// </summary>
-        /// <param name="game">A NewGameVM, This will be the game that will be created and added to the database.</param>
-        /// <returns>If successful, redirects user to action method called index. If the model passed is not valid, return the create form and send back the game model data.</returns>
+        /// <param name="game">The data for the new game.</param>
+        /// <returns>An asynchronous task that represents the operation. Returns the index view if the model is valid; otherwise, returns the create view with validation errors.</returns>
+        /// <remarks>
+        /// <para>
+        /// This action is triggered when a POST request is made to create a new game. It expects the data for the new game to be provided in the <paramref name="game"/> parameter.
+        /// </para>
+        /// <para>
+        /// If the model state is not valid, indicating validation errors, the action retrieves the necessary dropdown data for select inputs using the <see cref="IGameService.GetNewGameDropDownValues"/> method.
+        /// It sets up select lists for each input field by creating instances of <see cref="SelectList"/> with the retrieved data.
+        /// The select lists are assigned to the <see cref="ViewBag"/> properties to make them available in the view.
+        /// The action also logs a warning message and returns the create view with the provided <paramref name="game"/> and validation errors.
+        /// </para>
+        /// <para>
+        /// If the model state is valid, the action adds the new game asynchronously using the <see cref="IGameService.AddNewGameAsync"/> method.
+        /// It logs an information message indicating the user who added the game and redirects to the index view.
+        /// </para>
+        /// </remarks>
         [HttpPost]
         public async Task<IActionResult> Create(NewGameVM game)
         {
-            //Checks to see if the game being created is valid. If not, send the user back to the create view with the select input data again, and the NewGameVM passed as parameter back.
+            // Check if the model state is valid
             if (!ModelState.IsValid) 
             {
-                var gameDropdownData = await _service.GetNewGameDropDownValues(); //Get the dropdown data for select inputs on the create form.
+                // Retrieve the dropdown data for the new game
+                var gameDropdownData = await _service.GetNewGameDropDownValues();
 
-                //Send this data using the viewbag.
+                // Set up the select lists for the input fields using the retrieved dropdown data
+                // Each select list is created with the appropriate data source and value/text field mappings
                 ViewBag.Publishers = new SelectList(gameDropdownData.Publisher, "Id", "Name");
                 ViewBag.Developers = new SelectList(gameDropdownData.Developer, "Id", "Name");
                 ViewBag.VoiceActors = new SelectList(gameDropdownData.VoiceActor, "Id", "FullName");
                 ViewBag.Ratings = new SelectList(gameDropdownData.Rating, "Id", "Name");
                 ViewBag.Platform = new SelectList(gameDropdownData.Platform, "Id", "Name");
 
-                return View(game); //Send user to create form with the game model passed.
+                // Log a warning message indicating the failed game creation attempt
+                _logger.LogWarning($"{User.Identity!.Name} tried to create Game at {DateTime.Now} with IP {HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Not Detected"} but failed. [Reason: Game model was not valid]");
+
+                // Return the create view with the provided game and validation errors
+                return View(game); 
             }
 
-            await _service.AddNewGameAsync(game); //If the model is valid, then add the new game to the database. 
+            // Add the new game asynchronously using the provided game data
+            await _service.AddNewGameAsync(game);
 
-            return RedirectToAction("Index"); //Redirect the user to the index action.
+            // Log an information message indicating the successful game creation
+            _logger.LogInformation($"{User.Identity!.Name} added a Game called {game.Name} at {DateTime.Now} with IP {HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Not Detected"}.");
+
+            // Redirect to the index action
+            return RedirectToAction("Index"); 
         }
 
         //GET Game/Edit/{id}
         /// <summary>
-        /// An async action method called edit that will allow for a game to be updated using the id passed as a parameter. This action method will only send the admin user to the edit view, with
-        /// the game with the matching id passed as a parameter. It will send the game with the id to the edit form, so the user can see and update. Moreover, it will send the select input data to the edit form, so
-        /// that the user can select data for the select inputs.
+        /// Displays the edit form for a game with the specified ID.
         /// </summary>
-        /// <param name="id">The id of the game that will be updated to the database</param>
-        /// <returns>task of an action result. In this case, returns the view edit sending the game details.</returns>
+        /// <param name="id">The ID of the game to edit.</param>
+        /// <returns>An asynchronous task that represents the operation. Returns the edit view for the specified game if found; otherwise, returns the not found view.</returns>
+        /// <remarks>
+        /// <para>
+        /// This action retrieves the game with the specified ID asynchronously using the <see cref="IGameService.GetGameByIdAsync"/> method. If the game is found, it creates a new instance of <see cref="NewGameVM"/> and populates it with the data from the retrieved game.
+        /// </para>
+        /// <para>
+        /// The action also retrieves the necessary dropdown data for select inputs using the <see cref="IGameService.GetNewGameDropDownValues"/> method. It sets up select lists for each input field by creating instances of <see cref="SelectList"/> with the retrieved data. The select lists are assigned to the <see cref="ViewBag"/> properties to make them available in the view.
+        /// </para>
+        /// <para>
+        /// Finally, the action returns the edit view for the specified game, passing the populated <see cref="NewGameVM"/> instance as the model.If the game is not found, it returns the not found view.
+        /// </para>
+        /// </remarks>
         public async Task<IActionResult> Edit(int id)
         {
+            // Retrieve the game with the specified ID
+            var data = await _service.GetGameByIdAsync(id);
 
-            var data = await _service.GetGameByIdAsync(id); //Get the game from the database with the given id.
+            // Check if the game exists, if not return the not found view.
+            if (data == null)
+            {
+                _logger.LogWarning($"{User.Identity!.Name} tried to edit details of Game with {id} at {DateTime.Now} with IP {HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Not Detected"} but failed. [Reason: Game id not found]");
 
-            if (data == null) return View("NotFound"); //if data is null, meaning no game with id found, return the "NotFound" view.
+                return View("NotFound");
+            }
 
-            var response = new NewGameVM() //Create an instance of NewGameVM and set the values as the same the game retreived from the database.
+            // Create a new instance of NewGameVM and populate it with the data from the retrieved game
+            var response = new NewGameVM() 
             {
                 Id = data.Id,
                 Name = data.Name,
@@ -160,91 +227,155 @@ namespace GameStoreApp.Controllers
                 GameRatingId = data.GameRatingId,
                 GamePublisherId = data.GamePublisherId,
                 GameDeveloperId = data.GameDeveloperId,
-                VoiceActorIds = data.VoiceActors_Games.Select(x => x.VoiceActorId).ToList(), // returns all voice actors ids to a list of int.
-                PlatformIds = data.Platforms_Games.Select(x => x.PlatformId).ToList(), // returns all platforms ids to a list of int.
+                VoiceActorIds = data.VoiceActors_Games!.Select(x => x.VoiceActorId).ToList(), 
+                PlatformIds = data.Platforms_Games!.Select(x => x.PlatformId).ToList() 
             };
 
+            // Retrieve the dropdown data for the edit form
+            var gameDropdownData = await _service.GetNewGameDropDownValues();
 
-            var gameDropdownData = await _service.GetNewGameDropDownValues(); //get the dropdown data form the select inputs.
-
+            // Set up the select lists for the input fields using the retrieved dropdown data
+            // Each select list is created with the appropriate data source and value/text field mappings
             ViewBag.Publishers = new SelectList(gameDropdownData.Publisher, "Id", "Name");
             ViewBag.Developers = new SelectList(gameDropdownData.Developer, "Id", "Name");
             ViewBag.VoiceActors = new SelectList(gameDropdownData.VoiceActor, "Id", "FullName");
             ViewBag.Ratings = new SelectList(gameDropdownData.Rating, "Id", "Name");
             ViewBag.Platform = new SelectList(gameDropdownData.Platform, "Id", "Name");
 
-            return View(response); //return the edit view and send response.
+            // Return the edit view for the specified game, passing the populated NewGameVM instance as the model
+            return View(response); 
         }
 
-        [HttpPost]
         /// <summary>
-        ///  This async action method will receive data from an HttpPost request submitted from the edit form. The action method accepts two parameters, a int called id and A NewGameVM that will be the updated game details.
-        ///  This action method will update the game, in the database, with matching id to the updated game values passed as second param.
+        /// Handles the HTTP POST request for updating a game with the specified ID.
         /// </summary>
-        /// <param name="id">The id of the game being edited</param>
-        /// <param name="game">A NewGameVM which will be the new game details that will be updated to the game with the id passed.</param>
-        /// <returns>Task<IActionResult>, which is a redirect to action of index.</returns>
+        /// <param name="id">The ID of the game to update.</param>
+        /// <param name="game">The updated data for the game.</param>
+        /// <returns>An asynchronous task that represents the operation. Returns the index view if the model is valid and the ID matches; otherwise, returns the edit view with validation errors or the not found view.</returns>
+        /// <remarks>
+        /// <para>
+        /// This action is triggered when a POST request is made to update a game with the specified ID submitted from the edit form, and the updated game data in the <paramref name="game"/> parameter.
+        /// </para>
+        /// <para>
+        /// If the provided ID does not match the ID of the game in the <paramref name="game"/> parameter, the action returns the not found view.
+        /// </para>
+        /// <para>
+        /// If the model state is not valid, indicating validation errors, the action retrieves the necessary dropdown data for select inputs using the <see cref="IGameService.GetNewGameDropDownValues"/> method. It sets up select lists for each input field by creating instances of <see cref="SelectList"/> with the retrieved data. The select lists are assigned to the <see cref="ViewBag"/> properties to make them available in the view. The action returns the edit view with the provided <paramref name="game"/> and validation errors.
+        /// </para>
+        /// <para>
+        /// If the model state is valid and the provided ID matches the ID of the game, the action updates the game asynchronously using the <see cref="IGameService.UpdateGameAsync"/> method. It then redirects to the index view.
+        /// </para>
+        /// </remarks>
+        [HttpPost]
         public async Task<IActionResult> Edit(int id, NewGameVM game)
         {
-            if (id != game.Id) return View("NotFound"); //If the id passed does not match the id of NewGameVM passed, then return the "NotFound" view.
-
-            if (!ModelState.IsValid) //Checks to see if model is valid. If not then Send the admin user back to edit view with game passed and select input data.
+            // Check if the provided ID matches the ID of the game, if not return not found view
+            if (id != game.Id)
             {
+                _logger.LogWarning($"{User.Identity!.Name} tried to edit details of Game with {id} at {DateTime.Now} with IP {HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Not Detected"} but failed. [Reason: Game id not found]");
+
+                return View("NotFound");
+            }
+
+            // Check if the model state is not valid
+            if (!ModelState.IsValid) 
+            {
+                // Retrieve the dropdown data for the edit form
                 var gameDropdownData = await _service.GetNewGameDropDownValues();
 
+                // Set up the select lists for the input fields using the retrieved dropdown data
+                // Each select list is created with the appropriate data source and value/text field mappings
                 ViewBag.Publishers = new SelectList(gameDropdownData.Publisher, "Id", "Name");
                 ViewBag.Developers = new SelectList(gameDropdownData.Developer, "Id", "Name");
                 ViewBag.VoiceActors = new SelectList(gameDropdownData.VoiceActor, "Id", "FullName");
                 ViewBag.Ratings = new SelectList(gameDropdownData.Rating, "Id", "Name");
                 ViewBag.Platform = new SelectList(gameDropdownData.Platform, "Id", "Name");
 
+                _logger.LogWarning($"{User.Identity!.Name} tried to edit details of Game with {id} at {DateTime.Now} with IP {HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Not Detected"} but failed. [Reason: Invalid model state]");
+
+                // Return the edit view with the provided game and validation errors
                 return View(game); 
             }
 
-            await _service.UpdateGameAsync(game); //Update game with the game passed.
+            // Update the game asynchronously using the provided game data
+            await _service.UpdateGameAsync(game);
 
-            return RedirectToAction("Index"); //Redirect to action "Index"
+            _logger.LogInformation($"{User.Identity!.Name} edited details of Game: [ID = {id}, Name = {game.Name}] at {DateTime.Now} with IP {HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Not Detected"}.");
+
+            // Redirect to the index view
+            return RedirectToAction("Index"); 
         }
 
 
         /// <summary>
-        /// AllowsAnonymous meaning that unautherised users can use this action
+        /// Handles the filter functionality for games.
         /// </summary>
-        /// <param name="searchString"> A string that will be used to filter the list of games by.</param>
-        /// <returns>An Task<IActionResult>, this will return the view "Index" with the filtered list of games.</returns>
+        /// <param name="searchString">The search string used for filtering games.</param>
+        /// <returns>An asynchronous task that represents the operation. Returns the index view with filtered data if a search string is provided; otherwise, returns the index view with all games.</returns>
+        /// <remarks>
+        /// This action is decorated with the [AllowAnonymous] attribute, allowing unauthenticated access to the filter functionality. It handles the filter functionality for games based on the provided search string. The action retrieves all games asynchronously using the <see cref="IGameService.GetAllAsync"/> method, including the related entities for navigation properties (e.g., GamePublisher, GameDeveloper, GameRating).
+        /// <para>
+        /// If a non-empty search string is provided, the action filters the retrieved data by checking if the game's name or description contains the search string (case-insensitive comparison). The filtered data is then returned for the index view. If no search string is provided, the action returns all the retrieved game for the index view.
+        /// </para>
+        /// </remarks>
         [AllowAnonymous]
         public async Task<IActionResult> Filter(string searchString)
         {
-            //Gets all games, and include properties game publisher, game developer and game rating
-            var data = await _service.GetAllAsync(p => p.GamePublisher, d => d.GameDeveloper, r => r.GameRating);
+            // Retrieve all games with related entities
+            var data = await _service.GetAllAsync(p => p.GamePublisher!, d => d.GameDeveloper!, r => r.GameRating!);
 
-            //if search string is not null or empty
-            if(!string.IsNullOrEmpty(searchString))
+            // Check if a search string is provided
+            if (!string.IsNullOrEmpty(searchString))
             {
+                // Filter the data based on the search string (case-insensitive comparison)
                 var filteredData = data.Where(x => x.Name!.Contains(searchString, StringComparison.OrdinalIgnoreCase) || x.Description!.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
-                    
+
+                _logger.LogInformation($"{User.Identity!.Name ?? "Guest"} filtered Games index using search term {searchString} at {DateTime.Now} with IP {HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Not Detected"}.");
+
+                // Return the index view with the filtered data
                 return View("Index", filteredData);
             }
 
+            // Return the index view with all games
             return View("Index", data);
         }
 
-        //Get:
+        //Get: Game/Delete/{id}
         /// <summary>
-        /// A delete action method that will take the authorised admin user to an delete conformation screen of a game with the id provided. This is an async method that will return a task of iactionresult which is the return of the delete view for games controller. 
+        /// Handles the HTTP GET request for deleting a game.
         /// </summary>
-        /// <param name="id">The id of the game that the admin wants to delete.</param>
-        /// <returns>The delete view for the games controller with the game data.</returns>
+        /// <param name="id">The ID of the game to delete.</param>
+        /// <returns>An asynchronous task that represents the operation. Returns the delete view for the game if found; otherwise, returns the "NotFound" view.</returns>
+        /// <remarks>
+        /// <para>
+        /// This action retrieves a specific game asynchronously using the <see cref="IGameService.GetGameByIdAsync"/> method based on the provided ID.
+        /// If the game is found, it constructs a <see cref="NewGameVM"/> instance representing the game data.
+        /// </para>
+        /// <para>
+        /// The action also retrieves additional data needed for populating dropdown lists in the view, such as publishers, developers, voice actors, ratings, and platforms.
+        /// The retrieved data is assigned to the respective ViewBag properties with the help of the <see cref="SelectList"/> class.
+        /// </para>
+        /// <para>
+        /// Finally, the action returns the delete view with the constructed <see cref="NewGameVM"/> instance as the model.
+        /// If the game is not found, it returns the "NotFound" view instead.
+        /// </para>
+        /// </remarks>
         public async Task<IActionResult> Delete(int id)
         {
+            // Retrieve the game by ID
+            var data = await _service.GetGameByIdAsync(id);
 
-            var data = await _service.GetGameByIdAsync(id); //Get the game where the id passed to action matches game in the database id.
-
-            if (data == null) return View("NotFound"); //if no game with id found, meaning the data is null, then return the view "NotFound".
-
-            var response = new NewGameVM() //creates an new instance of NewGameVM
+            // Retrieve the game by ID
+            if (data == null)
             {
-                //set the response (NewGameVM) instance properties to the game instance called data, this was retreived from the database using the id provided. 
+                _logger.LogWarning($"{User.Identity!.Name} tried to delete Game with ID {id} at {DateTime.Now} with IP {HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Not Detected"} but failed. [Reason: Game id not found]");
+
+                return View("NotFound");
+            }
+
+            // Create a instance of NewGameVM representing the game data
+            var response = new NewGameVM() 
+            {            
                 Id = data.Id, 
                 Name = data.Name,
                 Description = data.Description,
@@ -255,36 +386,56 @@ namespace GameStoreApp.Controllers
                 GameRatingId = data.GameRatingId,
                 GamePublisherId = data.GamePublisherId,
                 GameDeveloperId = data.GameDeveloperId,
-                VoiceActorIds = data.VoiceActors_Games.Select(x => x.VoiceActorId).ToList(), //Select all voice actor ids to a list.
-                PlatformIds = data.Platforms_Games.Select(x => x.PlatformId).ToList(), //Select all platform ids to a list.
+                VoiceActorIds = data.VoiceActors_Games!.Select(x => x.VoiceActorId).ToList(), 
+                PlatformIds = data.Platforms_Games!.Select(x => x.PlatformId).ToList(), 
             };
 
+            // Retrieve additional data for dropdown lists
+            var gameDropdownData = await _service.GetNewGameDropDownValues();
 
-            var gameDropdownData = await _service.GetNewGameDropDownValues(); //get the dropdown data that will be displayed in the select inputs on the delete view. 
-
+            // Assign the retrieved data to ViewBag properties using SelectList
             ViewBag.Publishers = new SelectList(gameDropdownData.Publisher, "Id", "Name");
             ViewBag.Developers = new SelectList(gameDropdownData.Developer, "Id", "Name");
             ViewBag.VoiceActors = new SelectList(gameDropdownData.VoiceActor, "Id", "FullName");
             ViewBag.Ratings = new SelectList(gameDropdownData.Rating, "Id", "Name");
             ViewBag.Platform = new SelectList(gameDropdownData.Platform, "Id", "Name");
 
-            return View(response); //return the delete view and send the response data.
+            // Return the delete view with the constructed model
+            return View(response); 
         }
 
         /// <summary>
-        /// This action method will be called when the admin user clicks submit on the delete form in the delete view, conforming that they want to delte the game. This is an async method that returns an task of IActionResult and redirects the user to the action index.
+        /// Handles the HTTP POST request to confirm the deletion of a game.
         /// </summary>
-        /// <param name="id">The id of the game being deleted.</param>
-        /// <returns>If the game was deleted, then redirect to the action index. If the game id was not found, then returns "NotFound" view.</returns>
+        /// <param name="id">The ID of the game to delete.</param>
+        /// <returns>An asynchronous task that represents the operation. Deletes the game if found and redirects to the index page; otherwise, returns the "NotFound" view.</returns>
+        /// <remarks>
+        /// <para>
+        /// This action is triggered when the user confirms the deletion of a game by submitting the delete form.
+        /// It retrieves the game details asynchronously using the <see cref="IGameService.GetGameByIdAsync"/> method based on the provided ID.
+        /// If the game is found, it proceeds to delete the game by calling the <see cref="IGameService.DeleteAsync"/> method.
+        /// </para>
+        /// <para>
+        /// If the game is not found, the action returns the "NotFound" view.
+        /// After successful deletion, the action redirects to the index page using the <see cref="RedirectToAction"/> method.
+        /// </para>
+        /// </remarks>
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var dataDetails = await _service.GetGameByIdAsync(id); // get the game from the db which the id that matches the id passed.
-            if (dataDetails == null) return View("NotFound"); //if the data is null then return the "NotFound" View.
+            // Retrieve the game details by ID
+            var dataDetails = await _service.GetGameByIdAsync(id);
 
-            await _service.DeleteAsync(id); //Delete the game from the db, with the id passed.
+            // Check if the game details are found
+            if (dataDetails == null) return View("NotFound");
 
-            return RedirectToAction(nameof(Index)); //Redirect the user to the index action method.
+            _logger.LogInformation($"{User.Identity!.Name} deleted game: [ID = {id}, Name = {dataDetails.Name}] at {DateTime.Now} with IP {HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Not Detected"}.");
+
+            // Delete the game
+            await _service.DeleteAsync(id);
+
+            // Redirect to the index page
+            return RedirectToAction(nameof(Index)); 
         }
 
     }
