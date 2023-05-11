@@ -44,22 +44,25 @@
                     <div class="col-md-6">
                         <div class="card-body">
                             @*<p class="card-text">@item.Description</p>*@
-                            <p class="card-text"><b>Publisher: </b> @item.GamePublisher.Name</p>
-                            <p class="card-text"><b>Developer: </b> @item.GameDeveloper.Name</p>
+                            <p class="card-text"><b>Publisher: </b> @item.GamePublisher!.Name</p>
+                            <p class="card-text"><b>Developer: </b> @item.GameDeveloper!.Name</p>
                             @*The following cart text section uses if statements to check which rating the game is then uses the badge for that rating.*@
                             <p class="card-text">
                                 <b>PEGI: </b>
-                                @if (@item.GameRating.Name == "3" || @item.GameRating.Name == "7")
+                                @switch (item.GameRating!.Name)
                                 {
-                                    <span class="badge bg-success text-white">@item.GameRating.Name</span>
-                                }
-                                else if (@item.GameRating.Name == "12" || @item.GameRating.Name == "16" || @item.GameRating.Name == "!")
-                                {
-                                    <span class="badge bg-warning text-white">@item.GameRating.Name</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-danger text-white">@item.GameRating.Name</span>
+                                    case "3":
+                                    case "7":
+                                        <span class="badge bg-success text-white">@item.GameRating.Name</span>
+                                        break;
+                                    case "12":
+                                    case "16":
+                                    case "!":
+                                        <span class="badge bg-warning text-white">@item.GameRating.Name</span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-danger text-white">@item.GameRating.Name</span>
+                                        break;
                                 }
                             </p>
 
