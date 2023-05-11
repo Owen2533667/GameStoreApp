@@ -3,7 +3,8 @@ using GameStoreApp.Data.ViewModel;
 using GameStoreApp.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameStoreApp.Data.Services
+namespace GameStoreApp.Data.Services 
+{ 
 
     /// <summary>
     /// Represents a service for managing games.
