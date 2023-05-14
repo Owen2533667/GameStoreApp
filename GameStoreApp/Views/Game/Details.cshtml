@@ -134,15 +134,15 @@
                             {
                                 case "Game":
                                     action = "Index";
-                                    routeValues = new { pg };
+                                    routeValues = pg!;
                                     break;
                                 case "GameDeveloper":
                                     action = "Details";
-                                    routeValues = new { returnId, Id = Model.GameDeveloperId };
+                                    routeValues = @Model.GameDeveloperId;
                                     break;
                                 case "GamePublisher":
                                     action = "Details";
-                                    routeValues = new { returnId, Id = Model.GamePublisherId };
+                                    routeValues = @Model.GamePublisherId;
                                     break;
                                 default:
                                     action = "Index";
