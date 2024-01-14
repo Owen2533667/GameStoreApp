@@ -13,6 +13,7 @@ The GameStoreApp is an online store that sells video games. Users can browse the
 - Entity Framework
 - Full-stack development
 - C#
+- Model-View-Controller (MVC)
 
 ## 🔗 Links
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/owen-hughes-146929244/)
